@@ -7,14 +7,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['title', 'slug', 'excerpt', 'content', 'status', 'published_at', 'author_id'])]
+#[Fillable([
+    'title', 'slug', 'category', 'excerpt', 'content', 'tags', 'hero_image', 'featured',
+    'sort_order', 'meta_title', 'meta_description', 'status', 'published_at', 'author_id',
+])]
 class BlogPost extends Model
 {
     use HasFactory;
 
     protected function casts(): array
     {
-        return ['published_at' => 'datetime'];
+        return [
+            'published_at' => 'datetime',
+            'tags' => 'array',
+            'featured' => 'boolean',
+            'sort_order' => 'integer',
+        ];
     }
 
     public function author(): BelongsTo

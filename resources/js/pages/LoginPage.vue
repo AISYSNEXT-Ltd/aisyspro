@@ -22,12 +22,13 @@ async function submit() {
 </script>
 
 <template>
-    <main class="login-page"><section class="login-visual"><RouterLink to="/" class="brand"><span class="brand-mark">A</span><span>AISYS<strong>PRO</strong></span></RouterLink><div><span class="eyebrow light">PLATEFORME DE GESTION</span><h1>Votre activité,<br />pilotée simplement.</h1><p>CRM, ventes, tâches et contenus réunis dans un espace professionnel et sécurisé.</p></div><small>© {{ new Date().getFullYear() }} AISYSPRO</small></section>
-        <section class="login-form-wrap"><form class="login-card" @submit.prevent="submit"><span class="eyebrow">ESPACE SÉCURISÉ</span><h2>Connexion au Back Office</h2><p>Utilisez votre identifiant ou votre adresse e-mail.</p>
+    <main class="login-page"><section class="login-visual"><RouterLink to="/" class="site-brand"><strong>AISYS</strong><span>PRO</span></RouterLink><div><span class="eyebrow light">Votre système métier unifié</span><h1>Pilotez mieux.<br />Décidez plus vite.</h1><p>CRM, ventes, contenu et configuration réunis dans un environnement sécurisé, pensé pour faire avancer votre activité.</p><ul><li>✓ Données centralisées</li><li>✓ Accès sécurisé</li><li>✓ Processus paramétrables</li></ul></div><small>workspace.aisyspro.tn</small></section>
+        <section class="login-form-wrap"><form class="login-card" @submit.prevent="submit"><span class="site-brand dark"><strong>AISYS</strong><span>PRO</span></span><span class="eyebrow">ESPACE SÉCURISÉ</span><h2>Connexion au back-office</h2><p>Accédez à votre espace de gestion AISYSPRO.</p>
             <label><span>Identifiant</span><input v-model="form.credential" autocomplete="username" required autofocus placeholder="Votre identifiant" /></label>
             <label><span>Mot de passe</span><input v-model="form.password" type="password" autocomplete="current-password" required placeholder="Votre mot de passe" /></label>
             <label class="remember"><input v-model="form.remember" type="checkbox" /> Rester connecté</label>
-            <p v-if="error" class="form-error">{{ error }}</p><button class="primary-button login-submit" :disabled="loading">{{ loading ? 'Connexion…' : 'Se connecter' }}</button>
-            <RouterLink to="/" class="back-link">← Retour au site public</RouterLink></form></section>
+            <p v-if="error" class="form-error">{{ error }}</p><button class="site-cta login-submit" :disabled="loading">{{ loading ? 'Connexion…' : 'Accéder au back-office' }}</button>
+            <div class="login-separator"><span>ou</span></div><button type="button" class="chatgpt-login" disabled title="Authentification ChatGPT non configurée">Continuer avec ChatGPT</button>
+            <RouterLink to="/" class="back-link">← Retour au site</RouterLink></form></section>
     </main>
 </template>

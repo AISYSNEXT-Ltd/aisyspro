@@ -12,7 +12,7 @@ class BlogPostController extends CrudController
 {
     protected string $modelClass = BlogPost::class;
 
-    protected array $searchColumns = ['title', 'excerpt', 'content'];
+    protected array $searchColumns = ['title', 'category', 'excerpt', 'content'];
 
     protected array $relations = ['author:id,name'];
 
@@ -21,8 +21,16 @@ class BlogPostController extends CrudController
         return [
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'alpha_dash', 'max:255', Rule::unique('blog_posts')->ignore($model?->getKey())],
+            'category' => ['nullable', 'string', 'max:255'],
             'excerpt' => ['nullable', 'string', 'max:1000'],
             'content' => ['nullable', 'string'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['string', 'max:80'],
+            'hero_image' => ['nullable', 'string', 'max:255'],
+            'featured' => ['sometimes', 'boolean'],
+            'sort_order' => ['sometimes', 'integer', 'min:0'],
+            'meta_title' => ['nullable', 'string', 'max:255'],
+            'meta_description' => ['nullable', 'string', 'max:320'],
             'status' => ['required', Rule::in(['draft', 'published'])],
             'published_at' => ['nullable', 'date'],
             'author_id' => ['nullable', 'exists:users,id'],

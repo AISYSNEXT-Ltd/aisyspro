@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\BlogPost;
 use App\Models\Faq;
 use App\Models\Inquiry;
 use App\Models\Pack;
 use App\Models\Role;
 use App\Models\Solution;
 use App\Models\User;
+use Database\Seeders\ReferenceContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -46,6 +48,52 @@ class PublicContentAndInquiryTest extends TestCase
             'type' => 'quote',
             'status' => 'new',
         ]);
+    }
+
+    public function test_reference_content_snapshot_imports_all_solutions_and_articles(): void
+    {
+        $this->seed(ReferenceContentSeeder::class);
+
+        $this->assertDatabaseCount('solutions', 52);
+        $this->assertDatabaseCount('blog_posts', 57);
+        $this->assertDatabaseHas('solutions', [
+            'slug' => 'solution-batiment',
+            'category' => 'Opérations terrain',
+            'status' => 'published',
+        ]);
+        $this->assertDatabaseHas('blog_posts', [
+            'slug' => 'comment-deployer-projet-sur-vps',
+            'category' => 'Hébergement & DevOps',
+            'status' => 'published',
+        ]);
+    }
+
+    public function test_public_catalogs_support_search_category_and_detail_pages(): void
+    {
+        Solution::create([
+            'title' => 'Solution médicale',
+            'slug' => 'solution-medicale',
+            'category' => 'Santé',
+            'short_description' => 'Gestion du cabinet',
+            'status' => 'published',
+        ]);
+        BlogPost::create([
+            'title' => 'Guide santé',
+            'slug' => 'guide-sante',
+            'category' => 'Santé',
+            'content' => 'Contenu du guide.',
+            'status' => 'published',
+            'published_at' => now()->subDay(),
+        ]);
+
+        $this->getJson('/api/v1/public/solutions?category=Sant%C3%A9&search=m%C3%A9dicale')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.slug', 'solution-medicale');
+        $this->getJson('/api/v1/public/solutions/solution-medicale')
+            ->assertOk()->assertJsonPath('data.category', 'Santé');
+        $this->getJson('/api/v1/public/posts?category=Sant%C3%A9&search=guide')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.slug', 'guide-sante');
+        $this->getJson('/api/v1/public/posts/guide-sante')
+            ->assertOk()->assertJsonPath('data.title', 'Guide santé');
     }
 
     public function test_honeypot_rejects_automated_submission(): void

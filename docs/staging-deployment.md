@@ -70,6 +70,8 @@ bash scripts/deploy-staging.sh /home/<site-user>/htdocs/staging.aisyspro.tn
 php artisan db:seed --force
 ```
 
+Le seeder importe le snapshot validé de la plateforme de référence : 52 solutions métier, 57 articles, trois packs et les FAQ publiques. Cette commande est exécutée lors de l'initialisation ou d'une reprise explicitement décidée ; elle n'est pas intégrée à chaque déploiement afin de préserver les modifications éditoriales réalisées ensuite dans le Back Office.
+
 ## Déploiement GitHub Actions
 
 Créer l'environnement GitHub `staging`, puis ces secrets :
@@ -91,6 +93,8 @@ Le workflow **Deploy staging** est volontairement manuel. Il ne peut s'exécuter
 https://staging.aisyspro.tn/up
 https://staging.aisyspro.tn/api/v1/health
 https://staging.aisyspro.tn/connexion-admin
+https://staging.aisyspro.tn/solutions
+https://staging.aisyspro.tn/blog
 ```
 
 Le endpoint métier `/api/v1/health` doit répondre avec un statut HTTP 200 et confirmer l'accès à MariaDB.

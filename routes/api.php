@@ -23,6 +23,10 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function (): void {
     Route::get('/health', HealthController::class)->name('api.v1.health');
     Route::get('/public/content', PublicContentController::class);
+    Route::get('/public/solutions', [PublicContentController::class, 'solutions']);
+    Route::get('/public/solutions/{slug}', [PublicContentController::class, 'solution']);
+    Route::get('/public/posts', [PublicContentController::class, 'posts']);
+    Route::get('/public/posts/{slug}', [PublicContentController::class, 'post']);
     Route::middleware('throttle:public-form')->post('/public/inquiries', [PublicInquiryController::class, 'store']);
     Route::middleware(['web', 'throttle:login'])->post('/auth/login', [AuthController::class, 'login']);
 

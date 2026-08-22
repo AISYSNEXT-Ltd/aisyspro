@@ -4,7 +4,11 @@ Reconstruction contrôlée de la plateforme AISYSPRO avec Laravel 13, Vue.js 3 e
 
 ## État du projet
 
-Le dépôt contient le socle technique initial. Il ne reproduit pas encore l'ensemble des fonctionnalités de l'application de référence. Les modules métier seront intégrés progressivement après inventaire et validation.
+Le dépôt contient une première version fonctionnelle du Front Office multipage et du Back Office AISYSPRO. La charte, les parcours publics et les contenus sont reconstruits à partir de l'application de référence validée.
+
+Le Front Office inclut l'accueil, le catalogue de 52 solutions, les fiches métier, les packs, le configurateur de devis, le blog avec 57 articles, les pages À propos, FAQ, Contact et les pages légales. Les solutions, articles, packs et FAQ sont administrables depuis le Back Office.
+
+Le Back Office inclut l'authentification applicative, les rôles, le tableau de bord et la gestion paginée des prospects, clients, devis, tâches, demandes, articles, solutions, packs, FAQ, pages et utilisateurs.
 
 Le premier lot Back Office inclut désormais l'authentification applicative, les rôles, le tableau de bord et la gestion paginée des prospects, clients, devis, tâches, articles et solutions.
 
@@ -42,6 +46,7 @@ Renseigner le mot de passe dans le fichier `.env` local, puis exécuter :
 
 ```bash
 php artisan migrate
+php artisan db:seed
 npm install
 npm run build
 composer run dev
@@ -54,6 +59,7 @@ Vérification API : `http://localhost:8000/api/v1/health`
 ## Tests
 
 ```bash
+npm run typecheck
 php artisan test
 npm run build
 ```
