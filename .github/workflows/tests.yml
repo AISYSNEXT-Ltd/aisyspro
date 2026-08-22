@@ -46,8 +46,14 @@ jobs:
       - name: Execute tests
         run: php artisan test
 
+      - name: Check PHP code style
+        run: vendor/bin/pint --test
+
       - name: Install frontend dependencies
         run: npm ci
 
       - name: Build Vue application
         run: npm run build
+
+      - name: Check Vue application
+        run: npm run typecheck

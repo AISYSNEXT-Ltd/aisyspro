@@ -6,6 +6,8 @@ Reconstruction contrôlée de la plateforme AISYSPRO avec Laravel 13, Vue.js 3 e
 
 Le dépôt contient le socle technique initial. Il ne reproduit pas encore l'ensemble des fonctionnalités de l'application de référence. Les modules métier seront intégrés progressivement après inventaire et validation.
 
+Le premier lot Back Office inclut désormais l'authentification applicative, les rôles, le tableau de bord et la gestion paginée des prospects, clients, devis, tâches, articles et solutions.
+
 ## Prérequis
 
 - PHP 8.3 ou supérieur
@@ -72,3 +74,5 @@ Les changements passent par une pull request vers `develop`. La fusion vers `mai
 Ne jamais committer les fichiers `.env`, mots de passe, tokens, certificats, clés privées ou accès CloudPanel. En production, `APP_ENV=production` et `APP_DEBUG=false` sont obligatoires.
 
 Voir [docs/architecture.md](docs/architecture.md) pour les décisions d'architecture.
+
+La procédure de mise en ligne CloudPanel est documentée dans [docs/staging-deployment.md](docs/staging-deployment.md).
