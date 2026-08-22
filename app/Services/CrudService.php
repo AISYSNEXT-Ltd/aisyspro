@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +30,8 @@ class CrudService
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->string('status')->toString());
+            $statusColumn = $modelClass === User::class ? 'is_active' : 'status';
+            $query->where($statusColumn, $request->string('status')->toString());
         }
 
         $perPage = in_array($request->integer('per_page'), [5, 10, 25, 50, 100], true)

@@ -1,6 +1,19 @@
 const status = (options) => ({ key: 'status', label: 'Statut', type: 'select', required: true, options });
 
 export const modules = {
+    users: {
+        title: 'Utilisateurs & rôles', singular: 'utilisateur', endpoint: '/users', search: 'nom, identifiant ou e-mail',
+        columns: [['name', 'Nom'], ['login', 'Identifiant'], ['email', 'E-mail'], ['role.name', 'Rôle'], ['is_active', 'Actif']],
+        fields: [
+            { key: 'name', label: 'Nom complet', required: true }, { key: 'login', label: 'Identifiant', required: true },
+            { key: 'email', label: 'E-mail', type: 'email', required: true },
+            { key: 'role_id', label: 'Rôle', type: 'select', required: true, options: [] },
+            { key: 'password', label: 'Mot de passe', type: 'password' },
+            { key: 'password_confirmation', label: 'Confirmation', type: 'password' },
+            { key: 'is_active', label: 'Compte actif', type: 'checkbox' },
+        ],
+        defaults: { role_id: '', is_active: true },
+    },
     clients: {
         title: 'Clients', singular: 'client', endpoint: '/clients', search: 'nom, e-mail, téléphone ou société',
         columns: [['name', 'Nom'], ['company', 'Société'], ['email', 'E-mail'], ['phone', 'Téléphone'], ['status', 'Statut']],

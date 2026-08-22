@@ -13,6 +13,10 @@ const navigation = [
     ['Solutions', '/admin/solutions'],
 ];
 
+const visibleNavigation = () => auth.user?.role?.slug === 'administrateur'
+    ? [...navigation, ['Utilisateurs & rôles', '/admin/users']]
+    : navigation;
+
 async function logout() {
     await auth.logout();
     router.push('/connexion-admin');
@@ -26,11 +30,12 @@ async function logout() {
                 <span class="brand-mark">A</span><span>AISYS<strong>PRO</strong></span>
             </RouterLink>
             <nav>
-                <RouterLink v-for="item in navigation" :key="item[1]" :to="item[1]" @click="open = false">{{ item[0] }}</RouterLink>
+                <RouterLink v-for="item in visibleNavigation()" :key="item[1]" :to="item[1]" @click="open = false">{{ item[0] }}</RouterLink>
             </nav>
             <div class="sidebar-user">
                 <small>Connecté en tant que</small>
                 <strong>{{ auth.user?.name }}</strong>
+                <RouterLink to="/admin/profil" @click="open = false">Mon profil</RouterLink>
                 <button type="button" @click="logout">Se déconnecter</button>
             </div>
         </aside>

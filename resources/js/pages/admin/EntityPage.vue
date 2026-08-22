@@ -22,6 +22,13 @@ const formatValue = (value) => value === true ? 'Oui' : value === false ? 'Non' 
 
 async function load() {
     loading.value = true;
+    if (moduleKey.value === 'users') {
+        const roleField = config.value.fields.find((field) => field.key === 'role_id');
+        if (!roleField.options.length) {
+            const { data } = await api.get('/roles');
+            roleField.options = data.data.map((role) => ({ value: role.id, label: role.name }));
+        }
+    }
     const { data } = await api.get(config.value.endpoint, { params: filters });
     rows.value = data.data;
     Object.assign(meta, data);
@@ -31,6 +38,11 @@ async function load() {
 function resetForm(row = null) {
     Object.keys(form).forEach((key) => delete form[key]);
     Object.assign(form, config.value.defaults || {}, row || {});
+    if (moduleKey.value === 'users' && row) {
+        form.role_id = row.role_id;
+        form.password = '';
+        form.password_confirmation = '';
+    }
     editingId.value = row?.id || null;
     errors.value = {};
     modal.value = true;
@@ -70,7 +82,7 @@ onMounted(load);
         <div class="panel table-panel">
             <div class="table-toolbar">
                 <label class="search-field"><span>⌕</span><input v-model="filters.search" :placeholder="`Rechercher par ${config.search}…`" /></label>
-                <select v-model="filters.status"><option value="">Tous les statuts</option><option v-for="option in config.fields.find((field) => field.key === 'status')?.options" :key="option.value" :value="option.value">{{ option.label }}</option></select>
+                <select v-if="config.fields.some((field) => field.key === 'status')" v-model="filters.status"><option value="">Tous les statuts</option><option v-for="option in config.fields.find((field) => field.key === 'status')?.options" :key="option.value" :value="option.value">{{ option.label }}</option></select>
                 <label class="per-page">Afficher <select v-model="filters.per_page"><option v-for="size in [5, 10, 25, 50, 100]" :key="size" :value="size">{{ size }}</option></select></label>
             </div>
             <div class="table-wrap">

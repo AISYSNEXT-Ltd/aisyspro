@@ -4,6 +4,7 @@ import LoginPage from '../pages/LoginPage.vue';
 import AdminLayout from '../layouts/AdminLayout.vue';
 import DashboardPage from '../pages/admin/DashboardPage.vue';
 import EntityPage from '../pages/admin/EntityPage.vue';
+import ProfilePage from '../pages/admin/ProfilePage.vue';
 import { useAuthStore } from '../stores/auth';
 
 const router = createRouter({
@@ -21,12 +22,13 @@ const router = createRouter({
             meta: { requiresAuth: true },
             children: [
                 { path: '', name: 'admin.dashboard', component: DashboardPage },
-                ...['clients', 'leads', 'quotes', 'tasks', 'blog-posts', 'solutions'].map((module) => ({
+                ...['clients', 'leads', 'quotes', 'tasks', 'blog-posts', 'solutions', 'users'].map((module) => ({
                     path: module,
                     name: `admin.${module}`,
                     component: EntityPage,
                     meta: { module },
                 })),
+                { path: 'profil', name: 'admin.profile', component: ProfilePage },
             ],
         },
         {
