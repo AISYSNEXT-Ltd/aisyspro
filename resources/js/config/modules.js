@@ -84,4 +84,52 @@ export const modules = {
         ],
         defaults: { status: 'draft', featured: false, sort_order: 0 },
     },
+    inquiries: {
+        title: 'Demandes entrantes', singular: 'demande', endpoint: '/inquiries', search: 'nom, e-mail, société ou message',
+        columns: [['name', 'Nom'], ['type', 'Type'], ['email', 'E-mail'], ['requested_solution', 'Solution'], ['status', 'Statut']],
+        fields: [
+            { key: 'type', label: 'Type', type: 'select', required: true, options: [{ value: 'contact', label: 'Contact' }, { value: 'quote', label: 'Devis' }] },
+            { key: 'name', label: 'Nom', required: true }, { key: 'email', label: 'E-mail', type: 'email', required: true },
+            { key: 'phone', label: 'Téléphone' }, { key: 'company', label: 'Société' },
+            { key: 'subject', label: 'Objet' }, { key: 'requested_solution', label: 'Solution demandée' },
+            status([{ value: 'new', label: 'Nouvelle' }, { value: 'in_progress', label: 'En traitement' }, { value: 'closed', label: 'Clôturée' }]),
+            { key: 'message', label: 'Message', type: 'textarea', wide: true, required: true },
+        ],
+        defaults: { type: 'contact', status: 'new' },
+    },
+    packs: {
+        title: 'Packs & tarifs', singular: 'pack', endpoint: '/packs', search: 'nom ou description',
+        columns: [['name', 'Nom'], ['price', 'Prix (DT)'], ['billing_period', 'Période'], ['featured', 'Mis en avant'], ['status', 'Statut']],
+        fields: [
+            { key: 'name', label: 'Nom', required: true }, { key: 'slug', label: 'Slug', required: true },
+            { key: 'price', label: 'Prix', type: 'number' }, { key: 'billing_period', label: 'Période' },
+            { key: 'description', label: 'Description', type: 'textarea', wide: true },
+            { key: 'features', label: 'Fonctionnalités (une par ligne)', type: 'list', wide: true },
+            status([{ value: 'draft', label: 'Brouillon' }, { value: 'published', label: 'Publié' }]),
+            { key: 'featured', label: 'Mise en avant', type: 'checkbox' }, { key: 'sort_order', label: 'Ordre', type: 'number' },
+        ],
+        defaults: { status: 'draft', featured: false, sort_order: 0, features: '' },
+    },
+    faqs: {
+        title: 'Questions fréquentes', singular: 'question', endpoint: '/faqs', search: 'question, réponse ou catégorie',
+        columns: [['question', 'Question'], ['category', 'Catégorie'], ['sort_order', 'Ordre'], ['status', 'Statut']],
+        fields: [
+            { key: 'question', label: 'Question', required: true, wide: true }, { key: 'answer', label: 'Réponse', type: 'textarea', required: true, wide: true },
+            { key: 'category', label: 'Catégorie' }, status([{ value: 'draft', label: 'Brouillon' }, { value: 'published', label: 'Publié' }]),
+            { key: 'sort_order', label: 'Ordre', type: 'number' },
+        ],
+        defaults: { status: 'draft', sort_order: 0 },
+    },
+    pages: {
+        title: 'Pages publiques', singular: 'page', endpoint: '/pages', search: 'titre, URL ou contenu',
+        columns: [['title', 'Titre'], ['slug', 'URL'], ['published_at', 'Publication'], ['status', 'Statut']],
+        fields: [
+            { key: 'title', label: 'Titre', required: true }, { key: 'slug', label: 'Slug', required: true },
+            { key: 'excerpt', label: 'Extrait', type: 'textarea', wide: true }, { key: 'content', label: 'Contenu', type: 'textarea', wide: true },
+            status([{ value: 'draft', label: 'Brouillon' }, { value: 'published', label: 'Publié' }]),
+            { key: 'published_at', label: 'Date de publication', type: 'datetime-local' },
+            { key: 'meta_title', label: 'Titre SEO' }, { key: 'meta_description', label: 'Description SEO', type: 'textarea', wide: true },
+        ],
+        defaults: { status: 'draft' },
+    },
 };

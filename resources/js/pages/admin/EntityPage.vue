@@ -38,6 +38,9 @@ async function load() {
 function resetForm(row = null) {
     Object.keys(form).forEach((key) => delete form[key]);
     Object.assign(form, config.value.defaults || {}, row || {});
+    config.value.fields.filter((field) => field.type === 'list').forEach((field) => {
+        form[field.key] = Array.isArray(form[field.key]) ? form[field.key].join('\n') : (form[field.key] || '');
+    });
     if (moduleKey.value === 'users' && row) {
         form.role_id = row.role_id;
         form.password = '';
@@ -51,9 +54,13 @@ function resetForm(row = null) {
 async function save() {
     errors.value = {};
     try {
+        const payload = { ...form };
+        config.value.fields.filter((field) => field.type === 'list').forEach((field) => {
+            payload[field.key] = String(payload[field.key] || '').split('\n').map((value) => value.trim()).filter(Boolean);
+        });
         editingId.value
-            ? await api.put(`${config.value.endpoint}/${editingId.value}`, form)
-            : await api.post(config.value.endpoint, form);
+            ? await api.put(`${config.value.endpoint}/${editingId.value}`, payload)
+            : await api.post(config.value.endpoint, payload);
         modal.value = false;
         await load();
     } catch (error) {
@@ -97,7 +104,7 @@ onMounted(load);
 
         <div v-if="modal" class="modal-layer" @click.self="modal = false"><form class="modal-card" @submit.prevent="save"><div class="modal-header"><div><span class="eyebrow">{{ editingId ? 'MODIFICATION' : 'CRÉATION' }}</span><h2>{{ editingId ? 'Modifier' : 'Ajouter' }} un {{ config.singular }}</h2></div><button type="button" @click="modal = false">×</button></div>
             <div class="form-grid"><label v-for="field in config.fields" :key="field.key" :class="{ wide: field.wide, checkbox: field.type === 'checkbox' }"><span>{{ field.label }} <b v-if="field.required">*</b></span>
-                <textarea v-if="field.type === 'textarea'" v-model="form[field.key]" rows="4" />
+                <textarea v-if="field.type === 'textarea' || field.type === 'list'" v-model="form[field.key]" rows="4" />
                 <select v-else-if="field.type === 'select'" v-model="form[field.key]" :required="field.required"><option v-for="option in field.options" :key="option.value" :value="option.value">{{ option.label }}</option></select>
                 <input v-else-if="field.type === 'checkbox'" v-model="form[field.key]" type="checkbox" />
                 <input v-else v-model="form[field.key]" :type="field.type || 'text'" :required="field.required" step="0.001" />

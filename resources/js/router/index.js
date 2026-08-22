@@ -22,7 +22,7 @@ const router = createRouter({
             meta: { requiresAuth: true },
             children: [
                 { path: '', name: 'admin.dashboard', component: DashboardPage },
-                ...['clients', 'leads', 'quotes', 'tasks', 'blog-posts', 'solutions', 'users'].map((module) => ({
+                ...['clients', 'leads', 'quotes', 'tasks', 'inquiries', 'blog-posts', 'solutions', 'packs', 'faqs', 'pages', 'users'].map((module) => ({
                     path: module,
                     name: `admin.${module}`,
                     component: EntityPage,

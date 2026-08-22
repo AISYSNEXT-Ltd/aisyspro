@@ -8,14 +8,21 @@ const router = useRouter();
 const open = ref(false);
 
 const navigation = [
-    ['Tableau de bord', '/admin'], ['Prospects', '/admin/leads'], ['Clients', '/admin/clients'],
-    ['Devis', '/admin/quotes'], ['Tâches & agenda', '/admin/tasks'], ['Blog', '/admin/blog-posts'],
-    ['Solutions', '/admin/solutions'],
+    ['Tableau de bord', '/admin', ['administrateur', 'commercial', 'editeur']],
+    ['Prospects', '/admin/leads', ['administrateur', 'commercial']],
+    ['Clients', '/admin/clients', ['administrateur', 'commercial']],
+    ['Devis', '/admin/quotes', ['administrateur', 'commercial']],
+    ['Tâches & agenda', '/admin/tasks', ['administrateur', 'commercial']],
+    ['Demandes', '/admin/inquiries', ['administrateur', 'commercial']],
+    ['Blog', '/admin/blog-posts', ['administrateur', 'editeur']],
+    ['Solutions', '/admin/solutions', ['administrateur', 'editeur']],
+    ['Packs & tarifs', '/admin/packs', ['administrateur', 'editeur']],
+    ['FAQ', '/admin/faqs', ['administrateur', 'editeur']],
+    ['Pages', '/admin/pages', ['administrateur', 'editeur']],
+    ['Utilisateurs & rôles', '/admin/users', ['administrateur']],
 ];
 
-const visibleNavigation = () => auth.user?.role?.slug === 'administrateur'
-    ? [...navigation, ['Utilisateurs & rôles', '/admin/users']]
-    : navigation;
+const visibleNavigation = () => navigation.filter((item) => item[2].includes(auth.user?.role?.slug));
 
 async function logout() {
     await auth.logout();
