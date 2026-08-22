@@ -61,6 +61,21 @@ class PublicContentAndInquiryTest extends TestCase
         $this->assertDatabaseCount('inquiries', 0);
     }
 
+    public function test_public_form_validation_errors_are_translated_to_french(): void
+    {
+        app()->setLocale('fr');
+
+        $this->postJson('/api/v1/public/inquiries', [
+            'type' => 'quote',
+            'name' => '',
+            'email' => 'invalide',
+            'message' => 'court',
+            'website' => '',
+        ])->assertUnprocessable()
+            ->assertJsonPath('errors.name.0', 'Le champ nom est obligatoire.')
+            ->assertJsonPath('errors.email.0', 'Le champ e-mail doit être une adresse e-mail valide.');
+    }
+
     public function test_commercial_can_process_inquiries(): void
     {
         $role = Role::create(['name' => 'Commercial', 'slug' => 'commercial']);
