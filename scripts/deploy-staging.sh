@@ -20,8 +20,16 @@ git switch develop
 git pull --ff-only origin develop
 
 composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
-npm ci --ignore-scripts
-npm run build
+
+if command -v npm >/dev/null 2>&1; then
+    npm ci --ignore-scripts
+    npm run build
+elif [[ ! -f public/build/manifest.json ]]; then
+    echo "npm est indisponible et aucun bundle frontend versionné n'est présent." >&2
+    exit 4
+else
+    echo "npm indisponible : utilisation du bundle frontend versionné et validé."
+fi
 
 php artisan down --retry=15
 trap 'php artisan up' EXIT

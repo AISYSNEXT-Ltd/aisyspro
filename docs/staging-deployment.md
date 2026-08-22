@@ -10,6 +10,7 @@ Le site `staging.aisyspro.tn` existe déjà dans CloudPanel. Cette procédure ne
 - HTTPS actif.
 - MariaDB : base et utilisateur dédiés au staging.
 - Le site Linux CloudPanel doit posséder le dépôt, `storage/` et `bootstrap/cache/`.
+- Node.js/npm est facultatif sur le VPS lorsque `public/build/manifest.json` et les bundles Vite validés sont déjà versionnés. Le workflow CI reste responsable du typecheck et de la construction de référence.
 
 Exemple de chemin, à adapter au véritable utilisateur CloudPanel :
 

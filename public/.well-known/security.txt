@@ -1,0 +1,4 @@
+Contact: mailto:contact.aisyspro@gmail.com
+Expires: 2027-08-22T00:00:00Z
+Preferred-Languages: fr, en
+Canonical: https://aisyspro.tn/.well-known/security.txt
