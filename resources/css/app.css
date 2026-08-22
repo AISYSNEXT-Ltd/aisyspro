@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+    color: #171329;
+    background: #f7f5ff;
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.foundation-page {
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+    padding: 2rem;
+    background:
+        radial-gradient(circle at top left, rgb(107 0 212 / 18%), transparent 38%),
+        #f7f5ff;
+}
+
+.foundation-card {
+    width: min(100%, 44rem);
+    padding: clamp(2rem, 5vw, 4rem);
+    border: 1px solid #e1daf5;
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 92%);
+    box-shadow: 0 1.5rem 4rem rgb(56 31 110 / 12%);
+}
+
+.foundation-card h1 {
+    margin: 0.6rem 0 1rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+}
+
+.foundation-card p {
+    color: #625b79;
+    line-height: 1.7;
+}
+
+.foundation-card dl {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.foundation-card dl div {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #f4efff;
+}
+
+.foundation-card dt,
+.eyebrow {
+    color: #6b00d4;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.foundation-card dd {
+    margin: 0.35rem 0 0;
+    font-weight: 700;
+}
+
+.foundation-card a {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #6b00d4;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .foundation-card dl {
+        grid-template-columns: 1fr;
+    }
+}
