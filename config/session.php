@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Str;
 
+$appHost = strtolower((string) parse_url((string) env('APP_URL', ''), PHP_URL_HOST));
+$isStaging = env('APP_ENV') === 'staging' || $appHost === 'staging.aisyspro.tn';
+
 return [
 
     /*
@@ -127,8 +130,8 @@ return [
     |
     */
 
-    'cookie' => env('APP_ENV') === 'staging'
-        ? 'aisyspro-staging-session'
+    'cookie' => $isStaging
+        ? '__Host-aisyspro-staging-session'
         : env(
             'SESSION_COOKIE',
             Str::slug((string) env('APP_NAME', 'laravel')).'-session'
@@ -145,7 +148,7 @@ return [
     |
     */
 
-    'path' => env('APP_ENV') === 'staging' ? '/' : env('SESSION_PATH', '/'),
+    'path' => $isStaging ? '/' : env('SESSION_PATH', '/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -158,7 +161,7 @@ return [
     |
     */
 
-    'domain' => env('APP_ENV') === 'staging' ? null : env('SESSION_DOMAIN'),
+    'domain' => $isStaging ? null : env('SESSION_DOMAIN'),
 
     /*
     |--------------------------------------------------------------------------
@@ -171,7 +174,7 @@ return [
     |
     */
 
-    'secure' => env('APP_ENV') === 'staging' ? true : env('SESSION_SECURE_COOKIE'),
+    'secure' => $isStaging ? true : env('SESSION_SECURE_COOKIE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -201,7 +204,7 @@ return [
     |
     */
 
-    'same_site' => env('APP_ENV') === 'staging' ? 'lax' : env('SESSION_SAME_SITE', 'lax'),
+    'same_site' => $isStaging ? 'lax' : env('SESSION_SAME_SITE', 'lax'),
 
     /*
     |--------------------------------------------------------------------------
