@@ -8,21 +8,14 @@ const router = useRouter();
 const open = ref(false);
 
 const navigation = [
-    ['Tableau de bord', '/admin', ['administrateur', 'commercial', 'editeur']],
-    ['Prospects', '/admin/leads', ['administrateur', 'commercial']],
-    ['Clients', '/admin/clients', ['administrateur', 'commercial']],
-    ['Devis', '/admin/quotes', ['administrateur', 'commercial']],
-    ['Tâches & agenda', '/admin/tasks', ['administrateur', 'commercial']],
-    ['Demandes', '/admin/inquiries', ['administrateur', 'commercial']],
-    ['Blog', '/admin/blog-posts', ['administrateur', 'editeur']],
-    ['Solutions', '/admin/solutions', ['administrateur', 'editeur']],
-    ['Packs & tarifs', '/admin/packs', ['administrateur', 'editeur']],
-    ['FAQ', '/admin/faqs', ['administrateur', 'editeur']],
-    ['Pages', '/admin/pages', ['administrateur', 'editeur']],
-    ['Utilisateurs & rôles', '/admin/users', ['administrateur']],
+    { label: 'Pilotage', items: [['Vue d’ensemble', '/admin', '▦', ['administrateur', 'commercial', 'editeur']]] },
+    { label: 'CRM & ventes', items: [['Prospects', '/admin/leads', '⌁', ['administrateur', 'commercial']], ['Clients', '/admin/clients', '♙', ['administrateur', 'commercial']], ['Devis', '/admin/quotes', '▤', ['administrateur', 'commercial']], ['Demandes & messages', '/admin/inquiries', '✉', ['administrateur', 'commercial']], ['Tâches & agenda', '/admin/tasks', '◷', ['administrateur', 'commercial']]] },
+    { label: 'Contenu', items: [['Page Builder', '/admin/page-builder', '▧', ['administrateur', 'editeur']], ['Blog', '/admin/blog-posts', '≡', ['administrateur', 'editeur']], ['Pages & SEO', '/admin/pages', '▧', ['administrateur', 'editeur']], ['FAQ', '/admin/faqs', '✦', ['administrateur', 'editeur']], ['Témoignages', '/admin/testimonials', '★', ['administrateur', 'editeur']], ['Médias', '/admin/media', '◫', ['administrateur', 'editeur']], ['Menus', '/admin/menus', '☷', ['administrateur', 'editeur']]] },
+    { label: 'Offre', items: [['Solutions CMS', '/admin/solutions', '◈', ['administrateur', 'editeur']], ['Packs & tarifs', '/admin/packs', '◫', ['administrateur', 'editeur']]] },
+    { label: 'Système', items: [['Utilisateurs & rôles', '/admin/users', '♧', ['administrateur']], ['Configuration', '/admin/settings', '⚙', ['administrateur']]] },
 ];
 
-const visibleNavigation = () => navigation.filter((item) => item[2].includes(auth.user?.role?.slug));
+const visibleNavigation = (group) => group.items.filter((item) => item[3].includes(auth.user?.role?.slug));
 
 async function logout() {
     await auth.logout();
@@ -37,7 +30,10 @@ async function logout() {
                 <span class="brand-mark">A</span><span>AISYS<strong>PRO</strong></span>
             </RouterLink>
             <nav>
-                <RouterLink v-for="item in visibleNavigation()" :key="item[1]" :to="item[1]" @click="open = false">{{ item[0] }}</RouterLink>
+                <section v-for="group in navigation" :key="group.label" v-show="visibleNavigation(group).length" class="nav-group">
+                    <small>{{ group.label }}</small>
+                    <RouterLink v-for="item in visibleNavigation(group)" :key="item[1]" :to="item[1]" @click="open = false"><span>{{ item[2] }}</span>{{ item[0] }}</RouterLink>
+                </section>
             </nav>
             <div class="sidebar-user">
                 <small>Connecté en tant que</small>

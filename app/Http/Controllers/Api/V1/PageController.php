@@ -22,6 +22,11 @@ class PageController extends CrudController
             'status' => ['required', Rule::in(['draft', 'published'])],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:320'],
+            'canonical_url' => ['nullable', 'url', 'max:2048'],
+            'og_title' => ['nullable', 'string', 'max:255'],
+            'og_description' => ['nullable', 'string', 'max:320'],
+            'og_image' => ['nullable', 'string', 'max:2048'],
+            'robots' => ['required', Rule::in(['index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'])],
             'published_at' => ['nullable', 'date'],
         ];
     }

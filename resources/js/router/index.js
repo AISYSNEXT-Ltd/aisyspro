@@ -15,6 +15,11 @@ import AdminLayout from '../layouts/AdminLayout.vue';
 import DashboardPage from '../pages/admin/DashboardPage.vue';
 import EntityPage from '../pages/admin/EntityPage.vue';
 import ProfilePage from '../pages/admin/ProfilePage.vue';
+import PageBuilderPage from '../pages/admin/PageBuilderPage.vue';
+import MenuBuilderPage from '../pages/admin/MenuBuilderPage.vue';
+import MediaLibraryPage from '../pages/admin/MediaLibraryPage.vue';
+import SettingsPage from '../pages/admin/SettingsPage.vue';
+import NotFoundPage from '../pages/NotFoundPage.vue';
 import { useAuthStore } from '../stores/auth';
 
 const router = createRouter({
@@ -49,9 +54,15 @@ const router = createRouter({
                     component: EntityPage,
                     meta: { module },
                 })),
+                { path: 'page-builder', name: 'admin.page-builder', component: PageBuilderPage },
+                { path: 'menus', name: 'admin.menus', component: MenuBuilderPage },
+                { path: 'media', name: 'admin.media', component: MediaLibraryPage },
+                { path: 'testimonials', name: 'admin.testimonials', component: EntityPage, meta: { module: 'testimonials' } },
+                { path: 'settings', name: 'admin.settings', component: SettingsPage },
                 { path: 'profil', name: 'admin.profile', component: ProfilePage },
             ],
         },
+        { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundPage, meta: { public: true } },
         {
             path: '/connexion-admin',
             name: 'login',

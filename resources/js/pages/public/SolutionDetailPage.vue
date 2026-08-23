@@ -14,7 +14,16 @@ async function load() {
     loading.value = true;
     const { data } = await api.get(`/public/solutions/${route.params.slug}`);
     solution.value = data.data;
-    useSeo(solution.value.meta_title || solution.value.title, solution.value.meta_description || solution.value.short_description);
+    useSeo({
+        title: solution.value.meta_title || solution.value.title,
+        description: solution.value.meta_description || solution.value.short_description,
+        canonical: solution.value.canonical_url,
+        ogTitle: solution.value.og_title,
+        ogDescription: solution.value.og_description,
+        image: solution.value.og_image || solution.value.hero_image,
+        robots: solution.value.robots,
+        structuredData: { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: solution.value.title, applicationCategory: 'BusinessApplication', description: solution.value.short_description, offers: { '@type': 'Offer', priceCurrency: 'TND' } },
+    });
     loading.value = false;
 }
 

@@ -15,7 +15,17 @@ async function load() {
     loading.value = true;
     const { data } = await api.get(`/public/posts/${route.params.slug}`);
     post.value = data.data;
-    useSeo(post.value.meta_title || post.value.title, post.value.meta_description || post.value.excerpt);
+    useSeo({
+        title: post.value.meta_title || post.value.title,
+        description: post.value.meta_description || post.value.excerpt,
+        canonical: post.value.canonical_url,
+        ogTitle: post.value.og_title,
+        ogDescription: post.value.og_description,
+        image: post.value.og_image || post.value.hero_image,
+        robots: post.value.robots,
+        type: 'article',
+        structuredData: { '@context': 'https://schema.org', '@type': 'Article', headline: post.value.title, description: post.value.excerpt, datePublished: post.value.published_at, author: { '@type': 'Organization', name: 'AISYSPRO' } },
+    });
     loading.value = false;
 }
 onMounted(load);

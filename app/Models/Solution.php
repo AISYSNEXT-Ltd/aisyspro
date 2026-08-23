@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
     'title', 'slug', 'category', 'short_description', 'description', 'problem', 'value_proposition',
-    'modules', 'benefits', 'tags', 'hero_image', 'meta_title', 'meta_description', 'status',
+    'modules', 'benefits', 'tags', 'hero_image', 'meta_title', 'meta_description',
+    'canonical_url', 'og_title', 'og_description', 'og_image', 'robots', 'status',
     'featured', 'sort_order',
 ])]
 class Solution extends Model

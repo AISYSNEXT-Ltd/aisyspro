@@ -73,6 +73,8 @@ php artisan db:seed --force
 
 Le seeder importe le snapshot validé de la plateforme de référence : 52 solutions métier, 57 articles, trois packs et les FAQ publiques. Cette commande est exécutée lors de l'initialisation ou d'une reprise explicitement décidée ; elle n'est pas intégrée à chaque déploiement afin de préserver les modifications éditoriales réalisées ensuite dans le Back Office.
 
+Le seeder ciblé `CmsFoundationSeeder` est exécuté automatiquement après les migrations. Il initialise uniquement les pages CMS, menus et paramètres manquants avec `firstOrCreate` et ne remplace jamais les modifications réalisées dans le Back Office.
+
 ## Déploiement GitHub Actions
 
 Créer l'environnement GitHub `staging`, puis ces secrets :

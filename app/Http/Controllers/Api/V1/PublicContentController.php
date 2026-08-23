@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\Faq;
+use App\Models\Menu;
 use App\Models\Pack;
+use App\Models\Page;
+use App\Models\SiteSetting;
 use App\Models\Solution;
+use App\Models\Testimonial;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,6 +24,33 @@ class PublicContentController extends Controller
             'faqs' => Faq::query()->where('status', 'published')->orderBy('sort_order')->get(),
             'posts' => BlogPost::query()->where('status', 'published')->whereNotNull('published_at')
                 ->where('published_at', '<=', now())->orderByDesc('featured')->latest('published_at')->limit(3)->get(),
+            'testimonials' => Testimonial::query()->where('status', 'published')->orderBy('sort_order')->get(),
+        ]);
+    }
+
+    public function page(string $slug): JsonResponse
+    {
+        return response()->json([
+            'data' => Page::query()->where('slug', $slug)->where('status', 'published')
+                ->with(['sections' => fn ($query) => $query->where('is_visible', true)->orderBy('sort_order')])
+                ->firstOrFail(),
+        ]);
+    }
+
+    public function menu(string $location): JsonResponse
+    {
+        $menu = Menu::query()->where('location', $location)->where('is_active', true)->firstOrFail();
+        $items = $menu->items()->whereNull('parent_id')->where('is_visible', true)
+            ->with(['children' => fn ($query) => $query->where('is_visible', true)->orderBy('sort_order')])
+            ->get();
+
+        return response()->json(['data' => $items]);
+    }
+
+    public function settings(): JsonResponse
+    {
+        return response()->json([
+            'data' => SiteSetting::query()->get()->mapWithKeys(fn (SiteSetting $setting) => [$setting->key => $setting->value]),
         ]);
     }
 

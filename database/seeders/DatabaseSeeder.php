@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         Role::query()->firstOrCreate(['slug' => 'commercial'], ['name' => 'Commercial']);
         Role::query()->firstOrCreate(['slug' => 'editeur'], ['name' => 'Éditeur']);
 
+        $this->call(CmsFoundationSeeder::class);
+
         foreach ([
             ['title' => 'LEXISPRO', 'slug' => 'lexispro', 'short_description' => 'Pilotage des cabinets juridiques, dossiers et échéances.', 'sort_order' => 10],
             ['title' => 'MEDISPRO', 'slug' => 'medispro', 'short_description' => 'Gestion structurée des cabinets médicaux et de leur activité.', 'sort_order' => 20],

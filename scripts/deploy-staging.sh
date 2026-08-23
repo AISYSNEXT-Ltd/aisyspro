@@ -35,6 +35,7 @@ php artisan down --retry=15
 trap 'php artisan up' EXIT
 
 php artisan migrate --force
+php artisan db:seed --class='Database\Seeders\CmsFoundationSeeder' --force
 [[ -L public/storage ]] || php artisan storage:link
 php artisan optimize
 
