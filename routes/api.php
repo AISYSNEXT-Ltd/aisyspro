@@ -73,7 +73,9 @@ Route::prefix('v1')->group(function (): void {
             Route::put('/menu-items/reorder', [MenuItemController::class, 'reorder']);
             Route::put('/menu-items/{menuItem}', [MenuItemController::class, 'update']);
             Route::delete('/menu-items/{menuItem}', [MenuItemController::class, 'destroy']);
-            Route::apiResource('media', MediaController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::apiResource('media', MediaController::class)
+                ->parameters(['media' => 'media'])
+                ->only(['index', 'store', 'update', 'destroy']);
         });
         Route::middleware('role:administrateur')->group(function (): void {
             Route::get('/roles', RoleController::class);
