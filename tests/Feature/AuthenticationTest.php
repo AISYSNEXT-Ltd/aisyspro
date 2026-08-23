@@ -68,6 +68,10 @@ class AuthenticationTest extends TestCase
             'remember' => true,
         ])->assertOk();
 
+        $this->getJson('/api/v1/auth/me')
+            ->assertOk()
+            ->assertJsonPath('user.login', 'adminx');
+
         $this->getJson('/api/v1/pages?per_page=100')
             ->assertOk()
             ->assertJsonPath('data.0.slug', 'accueil');
