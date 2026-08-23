@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,5 +45,31 @@ class AuthenticationTest extends TestCase
     public function test_guest_cannot_access_back_office_api(): void
     {
         $this->getJson('/api/v1/dashboard')->assertUnauthorized();
+    }
+
+    public function test_session_login_grants_access_to_protected_cms_routes(): void
+    {
+        $role = Role::create(['name' => 'Administrateur', 'slug' => 'administrateur']);
+        User::factory()->create([
+            'role_id' => $role->id,
+            'login' => 'adminx',
+            'password' => 'secret-password',
+        ]);
+        Page::query()->create([
+            'title' => 'Accueil',
+            'slug' => 'accueil',
+            'status' => 'published',
+            'robots' => 'index,follow',
+        ]);
+
+        $this->postJson('/api/v1/auth/login', [
+            'credential' => 'adminx',
+            'password' => 'secret-password',
+            'remember' => true,
+        ])->assertOk();
+
+        $this->getJson('/api/v1/pages?per_page=100')
+            ->assertOk()
+            ->assertJsonPath('data.0.slug', 'accueil');
     }
 }
