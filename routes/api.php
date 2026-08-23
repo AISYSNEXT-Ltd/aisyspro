@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BlogPostController;
 use App\Http\Controllers\Api\V1\ClientController;
 use App\Http\Controllers\Api\V1\DashboardController;
@@ -14,7 +13,6 @@ use App\Http\Controllers\Api\V1\MenuItemController;
 use App\Http\Controllers\Api\V1\PackController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\PageSectionController;
-use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\PublicContentController;
 use App\Http\Controllers\Api\V1\PublicInquiryController;
 use App\Http\Controllers\Api\V1\QuoteController;
@@ -39,15 +37,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/public/settings', [PublicContentController::class, 'settings']);
     });
     Route::middleware('throttle:public-form')->post('/public/inquiries', [PublicInquiryController::class, 'store']);
-    Route::middleware(['web', 'throttle:login'])->post('/auth/login', [AuthController::class, 'login']);
-
     // The back office uses Laravel's session guard. Apply the web middleware to
     // every protected API route so session authentication does not depend on
     // Sanctum's stateful-domain detection (notably behind a reverse proxy/CDN).
     Route::middleware(['web', 'auth:sanctum'])->group(function (): void {
-        Route::get('/auth/me', [AuthController::class, 'me']);
-        Route::post('/auth/logout', [AuthController::class, 'logout']);
-        Route::put('/profile/password', [ProfileController::class, 'password']);
         Route::get('/dashboard', DashboardController::class);
         Route::middleware('role:administrateur,commercial')->group(function (): void {
             Route::apiResource('clients', ClientController::class)->parameters(['clients' => 'id']);
