@@ -7,8 +7,12 @@ const api = axios.create({
         'X-Requested-With': 'XMLHttpRequest',
     },
     withCredentials: true,
+    withXSRFToken: true,
 });
 
 export default api;
 
-export const csrf = () => axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+export const csrf = () => axios.get('/sanctum/csrf-cookie', {
+    withCredentials: true,
+    withXSRFToken: true,
+});
