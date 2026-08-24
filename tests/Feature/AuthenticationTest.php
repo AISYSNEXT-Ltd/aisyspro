@@ -28,6 +28,9 @@ class AuthenticationTest extends TestCase
 
         $response->assertOk()->assertJsonPath('user.login', 'adminx');
         $this->assertAuthenticated();
+        $this->assertDatabaseHas('sessions', [
+            'user_id' => User::query()->where('login', 'adminx')->value('id'),
+        ]);
     }
 
     public function test_inactive_user_cannot_log_in(): void

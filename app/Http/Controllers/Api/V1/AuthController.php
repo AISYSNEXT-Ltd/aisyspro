@@ -28,8 +28,15 @@ class AuthController extends Controller
             ]);
         }
 
-        Auth::login($user, (bool) ($data['remember'] ?? false));
+        // Always use the session-backed web guard explicitly. This avoids the
+        // active API guard influencing authentication when Sanctum handles the
+        // request behind Cloudflare / Varnish.
+        Auth::guard('web')->login($user, (bool) ($data['remember'] ?? false));
         $request->session()->regenerate();
+        // Persist the regenerated session before returning the JSON response.
+        // The StartSession middleware will still attach the new secure cookie,
+        // while the database record is guaranteed to exist for the next page.
+        $request->session()->save();
         $user->forceFill(['last_login_at' => now()])->save();
 
         return response()->json(['user' => $user->fresh('role')]);
