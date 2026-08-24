@@ -38,14 +38,22 @@ if (app()->environment('staging')) {
         $cookieName = (string) config('session.cookie');
         $sessionKeys = array_keys($request->session()->all());
 
-        return response()->json([
+        $status = [
             'cookie_name' => $cookieName,
             'cookie_received' => $request->cookies->has($cookieName),
             'authenticated' => Auth::check(),
             'session_has_auth_key' => collect($sessionKeys)
                 ->contains(fn (string $key): bool => str_starts_with($key, 'login_web_')),
             'session_driver' => config('session.driver'),
-        ])->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        ];
+
+        $html = '<!doctype html><html lang="fr"><meta charset="utf-8"><title>Session staging</title>'
+            .'<body><pre>'.e(json_encode($status, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)).'</pre></body></html>';
+
+        return response($html, 200, [
+            'Content-Type' => 'text/html; charset=UTF-8',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, private',
+        ]);
     });
 }
 
