@@ -10,10 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): Response
     {
         $data = $request->validated();
         $user = User::query()
@@ -23,6 +24,10 @@ class AuthController extends Controller
             ->first();
 
         if (! $user || ! $user->is_active || ! Hash::check($data['password'], $user->password)) {
+            if (! $request->expectsJson()) {
+                return redirect('/connexion-admin?error=credentials');
+            }
+
             throw ValidationException::withMessages([
                 'credential' => ['Identifiants incorrects ou compte désactivé.'],
             ]);
@@ -38,6 +43,10 @@ class AuthController extends Controller
         // while the database record is guaranteed to exist for the next page.
         $request->session()->save();
         $user->forceFill(['last_login_at' => now()])->save();
+
+        if (! $request->expectsJson()) {
+            return redirect('/admin');
+        }
 
         return response()->json(['user' => $user->fresh('role')]);
     }

@@ -33,6 +33,24 @@ class AuthenticationTest extends TestCase
         ]);
     }
 
+    public function test_native_browser_login_redirects_to_admin(): void
+    {
+        $role = Role::create(['name' => 'Administrateur', 'slug' => 'administrateur']);
+        User::factory()->create([
+            'role_id' => $role->id,
+            'login' => 'adminx',
+            'password' => 'secret-password',
+        ]);
+
+        $this->post('/connexion-admin/session', [
+            'credential' => 'adminx',
+            'password' => 'secret-password',
+            'remember' => true,
+        ])->assertRedirect('/admin');
+
+        $this->assertAuthenticated();
+    }
+
     public function test_inactive_user_cannot_log_in(): void
     {
         User::factory()->create(['login' => 'blocked', 'is_active' => false, 'password' => 'secret-password']);
