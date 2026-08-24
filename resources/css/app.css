@@ -319,7 +319,8 @@ tbody tr:hover { background: #fcfbff; }
 }
 
 /* CMS professionnel : navigation, constructeurs et médiathèque */
-.admin-sidebar nav { overflow-y: auto; padding-right: .2rem; }
+.admin-sidebar nav { overflow-y: auto; padding-right: .2rem; scrollbar-width: none; -ms-overflow-style: none; }
+.admin-sidebar nav::-webkit-scrollbar { width: 0; height: 0; }
 .nav-group { display: grid; gap: .2rem; margin-bottom: .8rem; }
 .nav-group > small { padding: .4rem .9rem .25rem; color: #766b8f; font-size: .65rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
 .admin-sidebar nav .nav-group a { display: flex; align-items: center; gap: .65rem; padding: .58rem .8rem; font-size: .82rem; }
