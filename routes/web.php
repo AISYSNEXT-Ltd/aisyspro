@@ -34,7 +34,7 @@ Route::prefix('api/v1')->group(function (): void {
 });
 
 if (app()->environment('staging')) {
-    Route::get('/session-diagnostic', function (Request $request) {
+    Route::get('/controle-staging', function (Request $request) {
         $cookieName = (string) config('session.cookie');
         $sessionKeys = array_keys($request->session()->all());
 
