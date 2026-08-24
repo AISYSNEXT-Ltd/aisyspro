@@ -19,12 +19,12 @@ cd "${app_dir}"
 git switch develop
 git pull --ff-only origin develop
 
-# Un précédent déploiement optimisé peut encore contenir l'ancienne
-# configuration du cookie. La vider avant toute commande Artisan dépendant
-# de l'environnement garantit que le `.env` courant est relu.
-php artisan config:clear
-
 composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
+# Un précédent déploiement optimisé peut encore contenir l'ancienne
+# configuration du cookie. La vider après l'installation de Composer garantit
+# que le `.env` courant est relu, y compris lors du premier déploiement.
+php artisan config:clear
 
 if command -v npm >/dev/null 2>&1; then
     npm ci --ignore-scripts
