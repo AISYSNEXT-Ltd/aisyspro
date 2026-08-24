@@ -221,7 +221,10 @@ return [
     |
     */
 
-    'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
+    // The staging back office is first-party. A partitioned cookie combined
+    // with SameSite=Lax is rejected by Chromium, so never inherit a stale
+    // server-level CHIPS setting for this host.
+    'partitioned' => $isStaging ? false : env('SESSION_PARTITIONED_COOKIE', false),
 
     /*
     |--------------------------------------------------------------------------
