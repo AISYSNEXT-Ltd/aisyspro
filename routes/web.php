@@ -53,6 +53,13 @@ Route::middleware('throttle:login')
 
 if (app()->environment('staging')) {
     Route::get('/controle-staging', function (Request $request) {
+        if ($request->boolean('rotate') && ! $request->session()->has('rotation_probe')) {
+            $request->session()->put('rotation_probe', true);
+            $request->session()->regenerate();
+
+            return redirect('/controle-staging?probe=1');
+        }
+
         $cookieName = (string) config('session.cookie');
         $sessionKeys = array_keys($request->session()->all());
         $sessionTable = (string) config('session.table', 'sessions');
@@ -73,6 +80,7 @@ if (app()->environment('staging')) {
                 ->whereNotNull('user_id')
                 ->where('last_activity', '>=', now()->subMinutes(10)->timestamp)
                 ->count(),
+            'rotation_probe_persisted' => $request->session()->pull('rotation_probe', false),
         ];
 
         $html = '<!doctype html><html lang="fr"><meta charset="utf-8"><title>Session staging</title>'
