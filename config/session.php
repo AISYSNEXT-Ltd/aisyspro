@@ -135,7 +135,7 @@ return [
     */
 
     'cookie' => $isStaging
-        ? 'aisyspro_staging_session_v2'
+        ? 'aisyspro_staging_session_v3'
         : env(
             'SESSION_COOKIE',
             Str::slug((string) env('APP_NAME', 'laravel')).'-session'
