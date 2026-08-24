@@ -44,6 +44,13 @@ Route::prefix('api/v1')->group(function (): void {
     });
 });
 
+// Browser session login deliberately lives outside /api. Some reverse-proxy
+// configurations treat API response cookies differently; this web endpoint is
+// covered by the dedicated /connexion-admin Varnish exclusion.
+Route::middleware('throttle:login')
+    ->post('/connexion-admin/session', [AuthController::class, 'login'])
+    ->name('auth.session.login');
+
 if (app()->environment('staging')) {
     Route::get('/controle-staging', function (Request $request) {
         $cookieName = (string) config('session.cookie');

@@ -21,7 +21,7 @@ class AuthenticationTest extends TestCase
             'password' => 'secret-password',
         ]);
 
-        $response = $this->postJson('/api/v1/auth/login', [
+        $response = $this->postJson('/connexion-admin/session', [
             'credential' => 'adminx',
             'password' => 'secret-password',
         ]);

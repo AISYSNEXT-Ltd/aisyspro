@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import api, { csrf } from '../services/api';
+import api, { csrf, loginSession } from '../services/api';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({ user: null, initialized: false }),
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async login(payload) {
             await csrf();
-            const { data } = await api.post('/auth/login', payload);
+            const { data } = await loginSession(payload);
             this.user = data.user;
             this.initialized = true;
         },

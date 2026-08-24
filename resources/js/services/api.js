@@ -17,3 +17,12 @@ export const csrf = () => axios.get('/sanctum/csrf-cookie', {
     withCredentials: true,
     withXSRFToken: true,
 });
+
+export const loginSession = (payload) => axios.post('/connexion-admin/session', payload, {
+    headers: {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+    },
+    withCredentials: true,
+    withXSRFToken: true,
+});
