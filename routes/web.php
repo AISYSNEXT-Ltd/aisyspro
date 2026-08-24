@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/v1')->group(function (): void {
@@ -14,6 +15,10 @@ Route::prefix('api/v1')->group(function (): void {
         Route::get('/auth/session-status', function (Request $request) {
             $cookieName = (string) config('session.cookie');
             $sessionKeys = array_keys($request->session()->all());
+            $sessionTable = (string) config('session.table', 'sessions');
+            $currentSession = DB::table($sessionTable)
+                ->where('id', $request->session()->getId())
+                ->first(['user_id']);
 
             return response()->json([
                 'cookie_name' => $cookieName,
@@ -22,6 +27,12 @@ Route::prefix('api/v1')->group(function (): void {
                 'session_has_auth_key' => collect($sessionKeys)
                     ->contains(fn (string $key): bool => str_starts_with($key, 'login_web_')),
                 'session_driver' => config('session.driver'),
+                'current_session_record_exists' => $currentSession !== null,
+                'current_session_record_authenticated' => $currentSession?->user_id !== null,
+                'recent_authenticated_sessions' => DB::table($sessionTable)
+                    ->whereNotNull('user_id')
+                    ->where('last_activity', '>=', now()->subMinutes(10)->timestamp)
+                    ->count(),
             ])->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         });
     }
@@ -37,6 +48,10 @@ if (app()->environment('staging')) {
     Route::get('/controle-staging', function (Request $request) {
         $cookieName = (string) config('session.cookie');
         $sessionKeys = array_keys($request->session()->all());
+        $sessionTable = (string) config('session.table', 'sessions');
+        $currentSession = DB::table($sessionTable)
+            ->where('id', $request->session()->getId())
+            ->first(['user_id']);
 
         $status = [
             'cookie_name' => $cookieName,
@@ -45,6 +60,12 @@ if (app()->environment('staging')) {
             'session_has_auth_key' => collect($sessionKeys)
                 ->contains(fn (string $key): bool => str_starts_with($key, 'login_web_')),
             'session_driver' => config('session.driver'),
+            'current_session_record_exists' => $currentSession !== null,
+            'current_session_record_authenticated' => $currentSession?->user_id !== null,
+            'recent_authenticated_sessions' => DB::table($sessionTable)
+                ->whereNotNull('user_id')
+                ->where('last_activity', '>=', now()->subMinutes(10)->timestamp)
+                ->count(),
         ];
 
         $html = '<!doctype html><html lang="fr"><meta charset="utf-8"><title>Session staging</title>'
