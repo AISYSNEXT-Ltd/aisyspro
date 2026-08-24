@@ -19,6 +19,11 @@ cd "${app_dir}"
 git switch develop
 git pull --ff-only origin develop
 
+# Un précédent déploiement optimisé peut encore contenir l'ancienne
+# configuration du cookie. La vider avant toute commande Artisan dépendant
+# de l'environnement garantit que le `.env` courant est relu.
+php artisan config:clear
+
 composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
 if command -v npm >/dev/null 2>&1; then
@@ -38,6 +43,14 @@ php artisan migrate --force
 php artisan db:seed --class='Database\Seeders\CmsFoundationSeeder' --force
 [[ -L public/storage ]] || php artisan storage:link
 php artisan optimize
+
+session_cookie="$(php artisan tinker --execute='echo config("session.cookie");' 2>/dev/null)"
+session_domain="$(php artisan tinker --execute='var_export(config("session.domain"));' 2>/dev/null)"
+
+if [[ "${session_cookie}" != "aisyspro_staging_session_v2" || "${session_domain}" != "NULL" ]]; then
+    echo "Configuration de session staging invalide (cookie=${session_cookie}, domain=${session_domain})." >&2
+    exit 5
+fi
 
 php artisan up
 trap - EXIT
