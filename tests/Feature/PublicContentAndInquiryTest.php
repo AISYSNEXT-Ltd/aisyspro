@@ -32,6 +32,33 @@ class PublicContentAndInquiryTest extends TestCase
             ->assertJsonCount(1, 'faqs');
     }
 
+    public function test_public_content_uses_reference_pack_and_article_ordering(): void
+    {
+        Pack::create(['name' => 'CRM + Site web', 'slug' => 'business', 'status' => 'published', 'featured' => true, 'sort_order' => 20]);
+        Pack::create(['name' => 'Pack CRM', 'slug' => 'crm', 'status' => 'published', 'featured' => false, 'sort_order' => 10]);
+
+        foreach ([
+            ['title' => 'Guide 2', 'slug' => 'guide-2', 'sort_order' => 20, 'featured' => true],
+            ['title' => 'Guide 1', 'slug' => 'guide-1', 'sort_order' => 10, 'featured' => true],
+            ['title' => 'Guide non mis en avant', 'slug' => 'guide-3', 'sort_order' => 5, 'featured' => false],
+        ] as $post) {
+            BlogPost::create($post + ['status' => 'published', 'published_at' => now()->subDay()]);
+        }
+
+        $this->getJson('/api/v1/public/content')
+            ->assertOk()
+            ->assertJsonPath('packs.0.slug', 'crm')
+            ->assertJsonPath('packs.1.slug', 'business')
+            ->assertJsonPath('posts.0.slug', 'guide-1')
+            ->assertJsonPath('posts.1.slug', 'guide-2')
+            ->assertJsonCount(2, 'posts');
+
+        $this->getJson('/api/v1/public/posts')
+            ->assertOk()
+            ->assertJsonPath('data.0.slug', 'guide-3')
+            ->assertJsonPath('data.1.slug', 'guide-1');
+    }
+
     public function test_public_visitor_can_submit_an_inquiry(): void
     {
         $this->postJson('/api/v1/public/inquiries', [

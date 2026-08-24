@@ -10,7 +10,7 @@ const category = ref('');
 const open = ref(null);
 const categories = computed(() => [...new Set(faqs.value.map((faq) => faq.category).filter(Boolean))]);
 const filtered = computed(() => faqs.value.filter((faq) => !category.value || faq.category === category.value));
-onMounted(async () => { useSeo('FAQ AISYSPRO', 'Réponses sur les packs, la personnalisation, les données, les délais, la sécurité et le support.'); const { data } = await api.get('/public/content'); faqs.value = data.faqs; });
+onMounted(async () => { useSeo('FAQ AISYSPRO', 'Réponses sur les packs, la personnalisation, les données, les délais, la sécurité et le support.'); const { data } = await api.get('/public/content'); faqs.value = data.faqs; open.value = faqs.value[0]?.id ?? null; });
 </script>
 
 <template><PublicLayout><main><PageHero label="Centre d’aide" title="Les réponses claires." accent="Avant de vous engager." description="Packs, personnalisation, données, délais, sécurité et support : retrouvez les informations essentielles." />

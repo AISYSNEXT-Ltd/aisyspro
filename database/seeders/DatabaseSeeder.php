@@ -30,17 +30,17 @@ class DatabaseSeeder extends Seeder
         $this->call(CmsFoundationSeeder::class);
 
         foreach ([
-            ['title' => 'LEXISPRO', 'slug' => 'lexispro', 'short_description' => 'Pilotage des cabinets juridiques, dossiers et échéances.', 'sort_order' => 10],
-            ['title' => 'MEDISPRO', 'slug' => 'medispro', 'short_description' => 'Gestion structurée des cabinets médicaux et de leur activité.', 'sort_order' => 20],
-            ['title' => 'SERVISPRO', 'slug' => 'servispro', 'short_description' => 'CRM et opérations pour les sociétés de services.', 'sort_order' => 30],
+            ['title' => 'LEXISPRO', 'slug' => 'lexispro', 'short_description' => 'Pilotage des cabinets juridiques, dossiers et échéances.', 'sort_order' => 1010],
+            ['title' => 'MEDISPRO', 'slug' => 'medispro', 'short_description' => 'Gestion structurée des cabinets médicaux et de leur activité.', 'sort_order' => 1020],
+            ['title' => 'SERVISPRO', 'slug' => 'servispro', 'short_description' => 'CRM et opérations pour les sociétés de services.', 'sort_order' => 1030],
         ] as $solution) {
-            Solution::query()->firstOrCreate(['slug' => $solution['slug']], $solution + ['description' => $solution['short_description'], 'status' => 'published', 'featured' => true]);
+            Solution::query()->firstOrCreate(['slug' => $solution['slug']], $solution + ['description' => $solution['short_description'], 'status' => 'draft', 'featured' => false]);
         }
 
         foreach ([
-            ['name' => 'Pack CRM', 'slug' => 'essentiel', 'description' => 'Piloter votre activité.', 'price' => 500, 'billing_period' => 'paiement unique', 'features' => ['CRM adapté à votre métier', 'Prospects, clients et historique', 'Pipeline commercial configurable', 'Tâches, rappels et tableaux de bord', 'Paramétrage initial inclus'], 'sort_order' => 10],
-            ['name' => 'CRM + Site web', 'slug' => 'professionnel', 'description' => 'Gérer et développer.', 'price' => 750, 'billing_period' => 'paiement unique', 'features' => ['Tout le Pack CRM', 'Site web responsive professionnel', 'CMS : pages, blog, FAQ et témoignages', 'Formulaires connectés au CRM', 'Référencement SEO de base'], 'sort_order' => 20, 'featured' => true],
-            ['name' => 'Pack 360', 'slug' => 'entreprise', 'description' => 'Une solution clé en main.', 'price' => 950, 'billing_period' => 'hébergement valable 1 an', 'features' => ['Tout le pack CRM + Site web', 'Hébergement sécurisé pendant 1 an', 'Nom de domaine pendant 1 an', 'Certificat SSL et sauvegardes', 'Emails professionnels et mise en ligne'], 'sort_order' => 30],
+            ['name' => 'Pack CRM', 'slug' => 'crm', 'description' => 'Piloter votre activité.', 'price' => 500, 'billing_period' => 'paiement unique', 'features' => ['CRM adapté à votre métier', 'Prospects, clients et historique', 'Pipeline commercial configurable', 'Tâches, rappels et tableaux de bord', 'Paramétrage initial inclus'], 'sort_order' => 10],
+            ['name' => 'CRM + Site web', 'slug' => 'business', 'description' => 'Gérer et développer.', 'price' => 750, 'billing_period' => 'paiement unique', 'features' => ['Tout le Pack CRM', 'Site web responsive professionnel', 'CMS : pages, blog, FAQ et témoignages', 'Formulaires connectés au CRM', 'Référencement SEO de base'], 'sort_order' => 20, 'featured' => true],
+            ['name' => 'Pack 360', 'slug' => 'complete', 'description' => 'Une solution clé en main.', 'price' => 950, 'billing_period' => 'hébergement valable 1 an', 'features' => ['Tout le pack CRM + Site web', 'Hébergement sécurisé pendant 1 an', 'Nom de domaine pendant 1 an', 'Certificat SSL et sauvegardes', 'Emails professionnels et mise en ligne'], 'sort_order' => 30],
         ] as $pack) {
             Pack::query()->updateOrCreate(['slug' => $pack['slug']], $pack + ['status' => 'published', 'featured' => false]);
         }

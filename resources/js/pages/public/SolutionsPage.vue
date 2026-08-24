@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import PublicLayout from '../../layouts/PublicLayout.vue';
 import PageHero from '../../components/PageHero.vue';
+import ScaleCta from '../../components/ScaleCta.vue';
 import api from '../../services/api';
 import { useSeo } from '../../composables/useSeo';
 
@@ -29,4 +30,4 @@ onMounted(async () => {
         <div class="catalog-toolbar"><label><span>Rechercher un métier</span><input v-model="search" placeholder="Nom, secteur ou besoin…" @input="visible = 15"></label><label><span>Famille d’activité</span><select v-model="category" @change="visible = 15"><option value="">Toutes</option><option v-for="item in categories" :key="item">{{ item }}</option></select></label><p><strong>{{ filtered.length }}</strong> solutions disponibles</p></div>
         <div class="solution-catalog-grid"><RouterLink v-for="(solution, index) in filtered.slice(0, visible)" :key="solution.id" :to="`/solutions/${solution.slug}`" class="solution-widget"><header><span>{{ String(index + 1).padStart(2, '0') }}</span><small>{{ solution.category }}</small></header><h3>{{ solution.title }}</h3><p>{{ solution.short_description }}</p><div><em v-for="benefit in solution.benefits?.slice(0, 2)" :key="benefit">✓ {{ benefit }}</em></div><b>Découvrir +</b></RouterLink></div>
         <div v-if="filtered.length > visible" class="load-more"><p>{{ Math.min(visible, filtered.length) }} solutions affichées sur {{ filtered.length }}</p><button @click="visible += 15">Charger 15 solutions supplémentaires ↓</button></div>
-    </section></main></PublicLayout></template>
+    </section><ScaleCta /></main></PublicLayout></template>

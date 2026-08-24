@@ -20,10 +20,10 @@ class PublicContentController extends Controller
     {
         return response()->json([
             'solutions' => Solution::query()->where('status', 'published')->orderByDesc('featured')->orderBy('sort_order')->limit(5)->get(),
-            'packs' => Pack::query()->where('status', 'published')->orderByDesc('featured')->orderBy('sort_order')->get(),
+            'packs' => Pack::query()->where('status', 'published')->orderBy('sort_order')->get(),
             'faqs' => Faq::query()->where('status', 'published')->orderBy('sort_order')->get(),
             'posts' => BlogPost::query()->where('status', 'published')->whereNotNull('published_at')
-                ->where('published_at', '<=', now())->orderByDesc('featured')->latest('published_at')->limit(3)->get(),
+                ->where('published_at', '<=', now())->where('featured', true)->orderBy('sort_order')->limit(3)->get(),
             'testimonials' => Testimonial::query()->where('status', 'published')->orderBy('sort_order')->get(),
         ]);
     }
@@ -80,7 +80,7 @@ class PublicContentController extends Controller
         $this->filter($query, $request, ['title', 'excerpt', 'content', 'category']);
 
         return response()->json([
-            'data' => $query->orderByDesc('featured')->orderBy('sort_order')->latest('published_at')->get(),
+            'data' => $query->orderBy('sort_order')->latest('published_at')->get(),
             'categories' => BlogPost::query()->where('status', 'published')->whereNotNull('category')
                 ->distinct()->orderBy('category')->pluck('category'),
         ]);

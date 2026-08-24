@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import PublicLayout from '../../layouts/PublicLayout.vue';
 import PageHero from '../../components/PageHero.vue';
+import ScaleCta from '../../components/ScaleCta.vue';
 import api from '../../services/api';
 import { useSeo } from '../../composables/useSeo';
 
@@ -26,5 +27,7 @@ onMounted(async () => {
 
 <template><PublicLayout><main><PageHero label="Packs & tarifs" title="Aucune surprise." accent="Votre budget reste visible." description="Des packs adaptés, des options clairement tarifées et un total calculé avant l’envoi de votre demande." />
     <section class="new-section"><div class="pricing-new-grid"><article v-for="pack in packs" :key="pack.id" :class="{ featured: pack.featured }"><span v-if="pack.featured" class="popular">Le plus choisi</span><small>{{ pack.description }}</small><h3>{{ pack.name }}</h3><div class="price"><strong>{{ Number(pack.price).toFixed(0) }}</strong><b>DT</b></div><p>{{ pack.billing_period }}</p><ul><li v-for="feature in pack.features" :key="feature">✓ {{ feature }}</li></ul><RouterLink :to="{ path: '/devis', query: { pack: pack.slug } }" class="site-cta">Choisir ce pack ↗</RouterLink></article></div></section>
-    <section class="new-section options-section"><div class="new-heading"><span class="eyebrow-new">Options à la carte</span><h2>Ajoutez seulement<br><em>ce qui crée de la valeur.</em></h2><p>Chaque option peut être activée avec n’importe quel pack.</p></div><div class="options-grid"><article v-for="option in options" :key="option[0]"><span>+</span><div><h3>{{ option[0] }}</h3><p>{{ option[1] }}</p></div><b>+ {{ option[2] }} DT</b></article></div><p class="legal-note">Le coût unitaire des SMS, les budgets publicitaires Meta et les commissions des prestataires de paiement restent facturés par les plateformes concernées.</p><RouterLink to="/devis" class="site-cta large">Lancer le configurateur ↗</RouterLink></section>
+    <section class="new-section options-section"><div class="new-heading"><span class="eyebrow-new">Options à la carte</span><h2>Ajoutez seulement<br><em>ce qui crée de la valeur.</em></h2><p>Chaque option peut être activée avec n’importe quel pack.</p></div><div class="options-grid"><article v-for="option in options" :key="option[0]"><span>+</span><div><h3>{{ option[0] }}</h3><p>{{ option[1] }}</p></div><b>+ {{ option[2] }} DT</b></article></div><p class="legal-note">Le coût unitaire des SMS, les budgets publicitaires Meta et les commissions des prestataires de paiement restent facturés par les plateformes concernées.</p></section>
+    <section class="configurator-cta"><span>Besoin d’aide pour choisir ?</span><h2>Décrivez votre métier.<br><em>Nous recommandons le bon pack.</em></h2><RouterLink to="/devis" class="site-cta large">Lancer le configurateur ↗</RouterLink></section>
+    <ScaleCta />
     </main></PublicLayout></template>

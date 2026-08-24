@@ -11,7 +11,7 @@ class ReferenceContentSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ($this->snapshot('reference-solutions.json.gz.b64') as $entry) {
+        foreach ($this->snapshot('reference-solutions.json.gz.b64') as $index => $entry) {
             Solution::query()->updateOrCreate(
                 ['slug' => $entry['slug']],
                 [
@@ -29,12 +29,14 @@ class ReferenceContentSeeder extends Seeder
                     'meta_description' => $entry['metaDescription'] ?? null,
                     'status' => 'published',
                     'featured' => (bool) ($entry['featured'] ?? false),
-                    'sort_order' => (int) ($entry['sortOrder'] ?? 0),
+                    'sort_order' => $index + 1,
                 ],
             );
         }
 
-        foreach ($this->snapshot('reference-articles.json.gz.b64') as $entry) {
+        $homepagePosts = ['comment-deployer-projet-sur-vps', 'digitalisation-batiment', 'digitalisation-medecins'];
+
+        foreach ($this->snapshot('reference-articles.json.gz.b64') as $index => $entry) {
             BlogPost::query()->updateOrCreate(
                 ['slug' => $entry['slug']],
                 [
@@ -44,8 +46,8 @@ class ReferenceContentSeeder extends Seeder
                     'content' => $entry['content'] ?? null,
                     'tags' => $this->list($entry['tags'] ?? null),
                     'hero_image' => $entry['heroImage'] ?? null,
-                    'featured' => (bool) ($entry['featured'] ?? false),
-                    'sort_order' => (int) ($entry['sortOrder'] ?? 0),
+                    'featured' => in_array($entry['slug'], $homepagePosts, true),
+                    'sort_order' => $index + 1,
                     'meta_title' => $entry['metaTitle'] ?? null,
                     'meta_description' => $entry['metaDescription'] ?? null,
                     'status' => 'published',
