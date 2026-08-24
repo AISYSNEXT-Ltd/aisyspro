@@ -3,7 +3,11 @@
 use Illuminate\Support\Str;
 
 $appHost = strtolower((string) parse_url((string) env('APP_URL', ''), PHP_URL_HOST));
-$isStaging = env('APP_ENV') === 'staging' || $appHost === 'staging.aisyspro.tn';
+$appBasePath = strtolower(str_replace('\\', '/', base_path()));
+$isStaging = env('APP_ENV') === 'staging'
+    || $appHost === 'staging.aisyspro.tn'
+    || str_contains($appBasePath, '/staging.aisyspro.tn')
+    || str_contains($appBasePath, '/aisyspro-staging/');
 
 return [
 
@@ -37,7 +41,7 @@ return [
 
     'lifetime' => (int) env('SESSION_LIFETIME', 120),
 
-    'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
+    'expire_on_close' => $isStaging ? false : env('SESSION_EXPIRE_ON_CLOSE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -131,7 +135,7 @@ return [
     */
 
     'cookie' => $isStaging
-        ? '__Host-aisyspro-staging-session'
+        ? 'aisyspro_staging_session_v2'
         : env(
             'SESSION_COOKIE',
             Str::slug((string) env('APP_NAME', 'laravel')).'-session'
