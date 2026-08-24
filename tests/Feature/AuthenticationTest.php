@@ -42,11 +42,14 @@ class AuthenticationTest extends TestCase
             'password' => 'secret-password',
         ]);
 
-        $this->post('/connexion-admin/session', [
+        $response = $this->post('/connexion-admin/session', [
             'credential' => 'adminx',
             'password' => 'secret-password',
             'remember' => true,
-        ])->assertRedirect('/admin');
+        ]);
+
+        $response->assertRedirectContains('/connexion-admin/complete?token=');
+        $this->get($response->headers->get('Location'))->assertRedirect('/admin');
 
         $this->assertAuthenticated();
     }

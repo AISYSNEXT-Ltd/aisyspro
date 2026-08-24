@@ -4,9 +4,11 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-const error = computed(() => route.query.error === 'credentials'
-    ? 'Identifiants incorrects ou compte désactivé.'
-    : '');
+const error = computed(() => {
+    if (route.query.error === 'credentials') return 'Identifiants incorrects ou compte désactivé.';
+    if (route.query.error === 'expired') return 'La tentative de connexion a expiré. Veuillez réessayer.';
+    return '';
+});
 </script>
 
 <template>

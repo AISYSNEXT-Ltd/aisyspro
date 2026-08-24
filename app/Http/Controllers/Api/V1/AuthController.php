@@ -8,7 +8,9 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,6 +35,17 @@ class AuthController extends Controller
             ]);
         }
 
+        if (! $request->expectsJson()) {
+            $token = Str::random(64);
+            Cache::put('admin-login-completion:'.hash('sha256', $token), [
+                'user_id' => $user->getKey(),
+                'remember' => (bool) ($data['remember'] ?? false),
+            ], now()->addMinute());
+
+            return redirect('/connexion-admin/complete?token='.$token)
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        }
+
         // Always use the session-backed web guard explicitly. This avoids the
         // active API guard influencing authentication when Sanctum handles the
         // request behind Cloudflare / Varnish.
@@ -44,11 +57,31 @@ class AuthController extends Controller
         $request->session()->save();
         $user->forceFill(['last_login_at' => now()])->save();
 
-        if (! $request->expectsJson()) {
-            return redirect('/admin');
+        return response()->json(['user' => $user->fresh('role')]);
+    }
+
+    public function complete(Request $request): Response
+    {
+        $token = (string) $request->query('token', '');
+        $payload = strlen($token) === 64
+            ? Cache::pull('admin-login-completion:'.hash('sha256', $token))
+            : null;
+
+        if (! is_array($payload)) {
+            return redirect('/connexion-admin?error=expired');
         }
 
-        return response()->json(['user' => $user->fresh('role')]);
+        $user = User::query()->with('role')->find($payload['user_id'] ?? null);
+        if (! $user || ! $user->is_active) {
+            return redirect('/connexion-admin?error=credentials');
+        }
+
+        Auth::guard('web')->login($user, (bool) ($payload['remember'] ?? false));
+        $request->session()->save();
+        $user->forceFill(['last_login_at' => now()])->save();
+
+        return redirect('/admin')
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     }
 
     public function me(Request $request): JsonResponse

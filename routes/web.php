@@ -50,6 +50,9 @@ Route::prefix('api/v1')->group(function (): void {
 Route::middleware('throttle:login')
     ->post('/connexion-admin/session', [AuthController::class, 'login'])
     ->name('auth.session.login');
+Route::middleware('throttle:login')
+    ->get('/connexion-admin/complete', [AuthController::class, 'complete'])
+    ->name('auth.session.complete');
 
 if (app()->environment('staging')) {
     Route::get('/controle-staging', function (Request $request) {
