@@ -51,6 +51,24 @@ attribut `Domain`) et porte un nom distinct de celui de la production. Ne pas
 remplacer `SESSION_DOMAIN=null` par le domaine racine : cela ferait entrer les
 cookies de `aisyspro.tn` et `staging.aisyspro.tn` en collision.
 
+## Cache Varnish CloudPanel
+
+Les écrans administratifs, l'API et les routes de session ne doivent jamais
+être servis depuis Varnish. Dans **Varnish Cache → Excludes**, conserver ces
+expressions, une par ligne :
+
+```text
+^/admin(?:/|$)
+^/connexion-admin(?:/|$)
+^/api(?:/|$)
+^/sanctum(?:/|$)
+^/up$
+```
+
+Purger entièrement Varnish après chaque modification de cette liste. Sans ces
+exclusions, une réponse invitée `401` de `/api/v1/auth/me` peut être mise en
+cache et renvoyée après une connexion pourtant réussie.
+
 Après le premier `php artisan db:seed --force`, retirer `ADMIN_PASSWORD` du `.env` ou le remplacer par une valeur gérée dans le coffre de secrets. Le mot de passe applicatif reste stocké haché en base.
 
 ## Premier raccordement Git
