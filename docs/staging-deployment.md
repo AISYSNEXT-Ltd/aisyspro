@@ -36,7 +36,7 @@ DB_USERNAME=aisyspro_staging
 DB_PASSWORD=<secret>
 
 SESSION_DRIVER=database
-SESSION_DOMAIN=staging.aisyspro.tn
+SESSION_DOMAIN=null
 SESSION_SECURE_COOKIE=true
 SANCTUM_STATEFUL_DOMAINS=staging.aisyspro.tn
 
@@ -45,6 +45,11 @@ ADMIN_LOGIN=adminx
 ADMIN_EMAIL=<adresse-administrateur>
 ADMIN_PASSWORD=<secret-initial>
 ```
+
+Le cookie de session du staging est volontairement **propre à l'hôte** (aucun
+attribut `Domain`) et porte un nom distinct de celui de la production. Ne pas
+remplacer `SESSION_DOMAIN=null` par le domaine racine : cela ferait entrer les
+cookies de `aisyspro.tn` et `staging.aisyspro.tn` en collision.
 
 Après le premier `php artisan db:seed --force`, retirer `ADMIN_PASSWORD` du `.env` ou le remplacer par une valeur gérée dans le coffre de secrets. Le mot de passe applicatif reste stocké haché en base.
 
