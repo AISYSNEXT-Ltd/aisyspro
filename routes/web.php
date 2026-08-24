@@ -33,6 +33,22 @@ Route::prefix('api/v1')->group(function (): void {
     });
 });
 
+if (app()->environment('staging')) {
+    Route::get('/session-diagnostic', function (Request $request) {
+        $cookieName = (string) config('session.cookie');
+        $sessionKeys = array_keys($request->session()->all());
+
+        return response()->json([
+            'cookie_name' => $cookieName,
+            'cookie_received' => $request->cookies->has($cookieName),
+            'authenticated' => Auth::check(),
+            'session_has_auth_key' => collect($sessionKeys)
+                ->contains(fn (string $key): bool => str_starts_with($key, 'login_web_')),
+            'session_driver' => config('session.driver'),
+        ])->header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    });
+}
+
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/robots.txt', fn () => response(
     "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /connexion-admin\n\nSitemap: ".url('/sitemap.xml')."\n",
