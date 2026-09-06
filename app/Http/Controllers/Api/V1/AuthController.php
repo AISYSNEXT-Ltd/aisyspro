@@ -39,6 +39,7 @@ class AuthController extends Controller
             $token = Str::random(64);
             Cache::put('admin-login-completion:'.hash('sha256', $token), [
                 'user_id' => $user->getKey(),
+                'session_hash' => hash('sha256', $request->session()->getId()),
                 'remember' => (bool) ($data['remember'] ?? false),
             ], now()->addMinute());
 
@@ -63,9 +64,25 @@ class AuthController extends Controller
     public function complete(Request $request): Response
     {
         $token = (string) $request->query('token', '');
-        $payload = strlen($token) === 64
-            ? Cache::pull('admin-login-completion:'.hash('sha256', $token))
-            : null;
+        $payload = null;
+        if (preg_match('/^[a-zA-Z0-9]{64}$/D', $token)) {
+            $key = 'admin-login-completion:'.hash('sha256', $token);
+            $lock = Cache::lock($key.':lock', 10);
+            if ($lock->get()) {
+                try {
+                    $candidate = Cache::get($key);
+                    if (is_array($candidate) && hash_equals(
+                        (string) ($candidate['session_hash'] ?? ''),
+                        hash('sha256', $request->session()->getId()),
+                    )) {
+                        $payload = $candidate;
+                        Cache::forget($key);
+                    }
+                } finally {
+                    $lock->release();
+                }
+            }
+        }
 
         if (! is_array($payload)) {
             return redirect('/connexion-admin?error=expired');

@@ -14,6 +14,7 @@ class AuthenticationTest extends TestCase
 
     public function test_active_user_can_log_in_with_application_login(): void
     {
+        config(['session.driver' => 'database']);
         $role = Role::create(['name' => 'Administrateur', 'slug' => 'administrateur']);
         User::factory()->create([
             'role_id' => $role->id,
@@ -49,6 +50,7 @@ class AuthenticationTest extends TestCase
         ]);
 
         $response->assertRedirectContains('/connexion-admin/complete?token=');
+        $this->withCookie(config('session.cookie'), session()->getId());
         $this->get($response->headers->get('Location'))->assertRedirect('/admin');
 
         $this->assertAuthenticated();

@@ -50,7 +50,7 @@ class PublicContentController extends Controller
     public function settings(): JsonResponse
     {
         return response()->json([
-            'data' => SiteSetting::query()->get()->mapWithKeys(fn (SiteSetting $setting) => [$setting->key => $setting->value]),
+            'data' => SiteSetting::query()->whereIn('key', ['brand_name', 'email', 'phone', 'locale', 'default_robots'])->get()->mapWithKeys(fn (SiteSetting $setting) => [$setting->key => $setting->value]),
         ]);
     }
 

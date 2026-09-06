@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function (): void {
     // The back office uses Laravel's session guard. Apply the web middleware to
     // every protected API route so session authentication does not depend on
     // Sanctum's stateful-domain detection (notably behind a reverse proxy/CDN).
-    Route::middleware(['web', 'auth:sanctum'])->group(function (): void {
+    Route::middleware(['web', 'auth:sanctum', 'active'])->group(function (): void {
         Route::get('/dashboard', DashboardController::class);
         Route::middleware('role:administrateur,commercial')->group(function (): void {
             Route::apiResource('clients', ClientController::class)->parameters(['clients' => 'id']);
