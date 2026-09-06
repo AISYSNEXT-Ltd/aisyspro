@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\MediaController;
 use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\MenuItemController;
+use App\Http\Controllers\Api\V1\OfferOptionController;
 use App\Http\Controllers\Api\V1\PackController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\PageSectionController;
@@ -53,6 +54,7 @@ Route::prefix('v1')->group(function (): void {
             Route::apiResource('blog-posts', BlogPostController::class)->parameters(['blog-posts' => 'id']);
             Route::apiResource('solutions', SolutionController::class)->parameters(['solutions' => 'id']);
             Route::apiResource('packs', PackController::class)->parameters(['packs' => 'id']);
+            Route::apiResource('offer-options', OfferOptionController::class)->parameters(['offer-options' => 'id']);
             Route::apiResource('faqs', FaqController::class)->parameters(['faqs' => 'id']);
             Route::apiResource('pages', PageController::class)->parameters(['pages' => 'id']);
             Route::apiResource('testimonials', TestimonialController::class)->parameters(['testimonials' => 'id']);

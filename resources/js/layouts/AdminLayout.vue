@@ -11,7 +11,7 @@ const navigation = [
     { label: 'Pilotage', items: [['Vue d’ensemble', '/admin', '▦', ['administrateur', 'commercial', 'editeur']]] },
     { label: 'CRM & ventes', items: [['Prospects', '/admin/leads', '⌁', ['administrateur', 'commercial']], ['Clients', '/admin/clients', '♙', ['administrateur', 'commercial']], ['Devis', '/admin/quotes', '▤', ['administrateur', 'commercial']], ['Demandes & messages', '/admin/inquiries', '✉', ['administrateur', 'commercial']], ['Tâches & agenda', '/admin/tasks', '◷', ['administrateur', 'commercial']]] },
     { label: 'Contenu', items: [['Page Builder', '/admin/page-builder', '▧', ['administrateur', 'editeur']], ['Blog', '/admin/blog-posts', '≡', ['administrateur', 'editeur']], ['Pages & SEO', '/admin/pages', '▧', ['administrateur', 'editeur']], ['FAQ', '/admin/faqs', '✦', ['administrateur', 'editeur']], ['Témoignages', '/admin/testimonials', '★', ['administrateur', 'editeur']], ['Médias', '/admin/media', '◫', ['administrateur', 'editeur']], ['Menus', '/admin/menus', '☷', ['administrateur', 'editeur']]] },
-    { label: 'Offre', items: [['Solutions CMS', '/admin/solutions', '◈', ['administrateur', 'editeur']], ['Packs & tarifs', '/admin/packs', '◫', ['administrateur', 'editeur']]] },
+    { label: 'Offre', items: [['Solutions CMS', '/admin/solutions', '◈', ['administrateur', 'editeur']], ['Packs & tarifs', '/admin/packs', '◫', ['administrateur', 'editeur']], ['Options', '/admin/offer-options', '＋', ['administrateur', 'editeur']]] },
     { label: 'Système', items: [['Utilisateurs & rôles', '/admin/users', '♧', ['administrateur']], ['Configuration', '/admin/settings', '⚙', ['administrateur']]] },
 ];
 

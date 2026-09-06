@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Faq;
+use App\Models\OfferOption;
 use App\Models\Pack;
 use App\Models\Role;
 use App\Models\Solution;
@@ -43,6 +44,22 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Pack 360', 'slug' => 'complete', 'description' => 'Une solution clé en main.', 'price' => 950, 'billing_period' => 'hébergement valable 1 an', 'features' => ['Tout le pack CRM + Site web', 'Hébergement sécurisé pendant 1 an', 'Nom de domaine pendant 1 an', 'Certificat SSL et sauvegardes', 'Emails professionnels et mise en ligne'], 'sort_order' => 30],
         ] as $pack) {
             Pack::query()->updateOrCreate(['slug' => $pack['slug']], $pack + ['status' => 'published', 'featured' => false]);
+        }
+
+        foreach ([
+            ['name' => 'WhatsApp Business', 'slug' => 'whatsapp-business', 'price' => 120, 'sort_order' => 10],
+            ['name' => 'Pixel Meta & CAPI', 'slug' => 'pixel-meta-capi', 'price' => 150, 'sort_order' => 20],
+            ['name' => 'Analytics & Search Console', 'slug' => 'analytics-search-console', 'price' => 90, 'sort_order' => 30],
+            ['name' => 'SEO local', 'slug' => 'seo-local', 'price' => 180, 'sort_order' => 40],
+            ['name' => 'Paiement en ligne', 'slug' => 'paiement-en-ligne', 'price' => 250, 'sort_order' => 50],
+            ['name' => 'Module SMS', 'slug' => 'module-sms', 'price' => 80, 'sort_order' => 60],
+            ['name' => 'Emails professionnels', 'slug' => 'emails-professionnels', 'price' => 60, 'sort_order' => 70],
+            ['name' => 'Support prioritaire', 'slug' => 'support-prioritaire', 'price' => 240, 'sort_order' => 80],
+        ] as $option) {
+            OfferOption::query()->updateOrCreate(
+                ['slug' => $option['slug']],
+                $option + ['description' => null, 'status' => 'published'],
+            );
         }
 
         foreach ([

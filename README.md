@@ -82,3 +82,5 @@ Ne jamais committer les fichiers `.env`, mots de passe, tokens, certificats, cl�
 Voir [docs/architecture.md](docs/architecture.md) pour les décisions d'architecture.
 
 La procédure de mise en ligne CloudPanel est documentée dans [docs/staging-deployment.md](docs/staging-deployment.md).
+
+Les évolutions fonctionnelles sont détaillées dans [docs/lot-1-securite.md](docs/lot-1-securite.md) et [docs/lot-2-conversion.md](docs/lot-2-conversion.md).

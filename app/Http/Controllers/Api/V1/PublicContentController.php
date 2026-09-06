@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\Faq;
 use App\Models\Menu;
+use App\Models\OfferOption;
 use App\Models\Pack;
 use App\Models\Page;
 use App\Models\SiteSetting;
@@ -21,6 +22,7 @@ class PublicContentController extends Controller
         return response()->json([
             'solutions' => Solution::query()->where('status', 'published')->orderByDesc('featured')->orderBy('sort_order')->limit(5)->get(),
             'packs' => Pack::query()->where('status', 'published')->orderBy('sort_order')->get(),
+            'offer_options' => OfferOption::query()->where('status', 'published')->orderBy('sort_order')->get(),
             'faqs' => Faq::query()->where('status', 'published')->orderBy('sort_order')->get(),
             'posts' => BlogPost::query()->where('status', 'published')->whereNotNull('published_at')
                 ->where('published_at', '<=', now())->where('featured', true)->orderBy('sort_order')->limit(3)->get(),

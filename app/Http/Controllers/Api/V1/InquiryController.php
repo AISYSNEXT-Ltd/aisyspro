@@ -12,7 +12,7 @@ class InquiryController extends CrudController
 
     protected array $searchColumns = ['name', 'email', 'phone', 'company', 'subject', 'requested_solution', 'message'];
 
-    protected array $relations = ['assignee:id,name'];
+    protected array $relations = ['assignee:id,name', 'lead:id,name,status', 'pack:id,name,slug'];
 
     protected function rules(?Model $model = null): array
     {
@@ -24,6 +24,13 @@ class InquiryController extends CrudController
             'company' => ['nullable', 'string', 'max:255'],
             'subject' => ['nullable', 'string', 'max:255'],
             'requested_solution' => ['nullable', 'string', 'max:255'],
+            'activity' => ['nullable', 'string', 'max:255'],
+            'company_size' => ['nullable', Rule::in(['solo', '2-10', '11-50', '51-200', '200-plus'])],
+            'user_count' => ['nullable', 'integer', 'min:1', 'max:10000'],
+            'hosting_preference' => ['nullable', Rule::in(['included', 'existing', 'undecided'])],
+            'desired_timeline' => ['nullable', Rule::in(['urgent', '1-3-months', '3-6-months', 'flexible'])],
+            'budget_range' => ['nullable', Rule::in(['under-1000', '1000-3000', '3000-10000', 'over-10000', 'undecided'])],
+            'estimated_total' => ['nullable', 'numeric', 'min:0'],
             'message' => ['required', 'string', 'max:5000'],
             'status' => ['required', Rule::in(['new', 'in_progress', 'closed'])],
             'assigned_to' => ['nullable', 'exists:users,id'],
