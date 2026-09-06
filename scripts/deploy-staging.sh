@@ -47,7 +47,7 @@ php artisan optimize
 session_cookie="$(php artisan tinker --execute='echo config("session.cookie");' 2>/dev/null)"
 session_domain="$(php artisan tinker --execute='var_export(config("session.domain"));' 2>/dev/null)"
 
-if [[ "${session_cookie}" != "aisyspro_staging_session_v2" || "${session_domain}" != "NULL" ]]; then
+if [[ "${session_cookie}" != "aisyspro_staging_session_v3" || "${session_domain}" != "NULL" ]]; then
     echo "Configuration de session staging invalide (cookie=${session_cookie}, domain=${session_domain})." >&2
     exit 5
 fi
