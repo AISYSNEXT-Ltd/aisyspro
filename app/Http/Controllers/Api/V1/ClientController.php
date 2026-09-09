@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Client;
+use App\Support\ReferenceGroups;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
 
 class ClientController extends CrudController
 {
@@ -20,7 +20,7 @@ class ClientController extends CrudController
             'phone' => ['nullable', 'string', 'max:40'],
             'company' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
-            'status' => ['required', Rule::in(['active', 'inactive'])],
+            'status' => ['required', ReferenceGroups::activeRule('client_status')],
             'notes' => ['nullable', 'string'],
         ];
     }

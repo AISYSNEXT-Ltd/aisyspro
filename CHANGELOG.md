@@ -2,6 +2,14 @@
 
 ## [Unreleased](https://github.com/laravel/laravel/compare/v13.10.0...13.x)
 
+### AISYSPRO — CRM et référentiels (9 septembre 2026)
+
+* Ajout du pipeline Kanban des prospects avec colonnes, ordre et couleurs administrables.
+* Centralisation des statuts, sources et priorités dans le module Système > Référentiels.
+* Création transactionnelle et idempotente d'un devis brouillon lors de l'enregistrement d'un prospect.
+* Ajout de l'historique CRM, des états d'erreur/reprise de chargement et du menu profil/notifications.
+* Ajout de quatre tests fonctionnels dédiés au workflow CRM et aux permissions des référentiels.
+
 ## [v13.10.0](https://github.com/laravel/laravel/compare/v13.9.0...v13.10.0) - 2026-08-17
 
 * Add "monthly" to the available log drivers comment by [@csemazharul](https://github.com/csemazharul) in https://github.com/laravel/laravel/pull/6855

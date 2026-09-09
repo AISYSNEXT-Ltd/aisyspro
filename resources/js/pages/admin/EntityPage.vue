@@ -15,29 +15,51 @@ const modal = ref(false);
 const editingId = ref(null);
 const form = reactive({});
 const errors = ref({});
+const loadError = ref('');
 let debounce;
+let loadSequence = 0;
 
 const getValue = (row, path) => path.split('.').reduce((value, key) => value?.[key], row) ?? '—';
 const formatValue = (value) => value === true ? 'Oui' : value === false ? 'Non' : value;
 
 async function load() {
+    const sequence = ++loadSequence;
     loading.value = true;
-    if (moduleKey.value === 'users') {
-        const roleField = config.value.fields.find((field) => field.key === 'role_id');
-        if (!roleField.options.length) {
-            const { data } = await api.get('/roles');
-            roleField.options = data.data.map((role) => ({ value: role.id, label: role.name }));
+    loadError.value = '';
+    try {
+        if (moduleKey.value === 'users') {
+            const roleField = config.value.fields.find((field) => field.key === 'role_id');
+            if (!roleField.options.length) {
+                const { data } = await api.get('/roles');
+                roleField.options = data.data.map((role) => ({ value: role.id, label: role.name }));
+            }
         }
+        const referenceFields = config.value.fields.filter((field) => field.referenceGroup);
+        await Promise.all(referenceFields.map(async (field) => {
+            const { data } = await api.get('/reference-values', { params: { group_key: field.referenceGroup, active_only: 1 } });
+            field.options = data.data.map((item) => ({ value: item.code, label: item.label, color: item.color, isDefault: item.is_default }));
+        }));
+        const { data } = await api.get(config.value.endpoint, { params: filters });
+        if (sequence !== loadSequence) return;
+        rows.value = data.data;
+        Object.assign(meta, data);
+    } catch (error) {
+        if (sequence !== loadSequence) return;
+        loadError.value = error.response?.data?.message || 'Impossible de charger les données. Vérifiez votre connexion puis réessayez.';
+        rows.value = [];
+    } finally {
+        if (sequence === loadSequence) loading.value = false;
     }
-    const { data } = await api.get(config.value.endpoint, { params: filters });
-    rows.value = data.data;
-    Object.assign(meta, data);
-    loading.value = false;
 }
 
 function resetForm(row = null) {
     Object.keys(form).forEach((key) => delete form[key]);
     Object.assign(form, config.value.defaults || {}, row || {});
+    if (!row) config.value.fields.filter((field) => field.referenceGroup).forEach((field) => {
+        const defaultOption = field.options.find((option) => option.isDefault) || field.options[0];
+        if (defaultOption) form[field.key] = defaultOption.value;
+    });
+    if (moduleKey.value === 'leads' && !row) form.submission_uuid = crypto.randomUUID();
     config.value.fields.filter((field) => field.type === 'list').forEach((field) => {
         form[field.key] = Array.isArray(form[field.key]) ? form[field.key].join('\n') : (form[field.key] || '');
     });
@@ -95,6 +117,7 @@ onMounted(load);
             <div class="table-wrap">
                 <table><thead><tr><th v-for="column in config.columns" :key="column[0]">{{ column[1] }}</th><th>Actions</th></tr></thead>
                     <tbody><tr v-if="loading"><td :colspan="config.columns.length + 1" class="empty-state">Chargement…</td></tr>
+                        <tr v-else-if="loadError"><td :colspan="config.columns.length + 1" class="empty-state error-state"><p>{{ loadError }}</p><button class="secondary-button" @click="load">Réessayer</button></td></tr>
                         <tr v-else-if="!rows.length"><td :colspan="config.columns.length + 1" class="empty-state">Aucun résultat. Ajoutez le premier élément.</td></tr>
                         <tr v-for="row in rows" v-else :key="row.id"><td v-for="column in config.columns" :key="column[0]"><span :class="column[0] === 'status' ? 'status-badge' : ''">{{ formatValue(getValue(row, column[0])) }}</span></td><td class="actions"><button @click="resetForm(row)">Modifier</button><button class="danger" @click="remove(row)">Supprimer</button></td></tr>
                     </tbody></table>

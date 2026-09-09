@@ -19,6 +19,8 @@ import PageBuilderPage from '../pages/admin/PageBuilderPage.vue';
 import MenuBuilderPage from '../pages/admin/MenuBuilderPage.vue';
 import MediaLibraryPage from '../pages/admin/MediaLibraryPage.vue';
 import SettingsPage from '../pages/admin/SettingsPage.vue';
+import LeadPipelinePage from '../pages/admin/LeadPipelinePage.vue';
+import ReferencePage from '../pages/admin/ReferencePage.vue';
 import NotFoundPage from '../pages/NotFoundPage.vue';
 import { useAuthStore } from '../stores/auth';
 
@@ -48,17 +50,20 @@ const router = createRouter({
             meta: { requiresAuth: true },
             children: [
                 { path: '', name: 'admin.dashboard', component: DashboardPage },
-                ...['clients', 'leads', 'quotes', 'tasks', 'inquiries', 'blog-posts', 'solutions', 'packs', 'offer-options', 'faqs', 'pages', 'users'].map((module) => ({
+                ...['clients', 'quotes', 'tasks', 'inquiries', 'blog-posts', 'solutions', 'packs', 'offer-options', 'faqs', 'pages', 'users'].map((module) => ({
                     path: module,
                     name: `admin.${module}`,
                     component: EntityPage,
                     meta: { module },
                 })),
+                { path: 'leads', name: 'admin.leads', component: LeadPipelinePage },
+                { path: 'leads/liste', name: 'admin.leads.list', component: EntityPage, meta: { module: 'leads' } },
                 { path: 'page-builder', name: 'admin.page-builder', component: PageBuilderPage },
                 { path: 'menus', name: 'admin.menus', component: MenuBuilderPage },
                 { path: 'media', name: 'admin.media', component: MediaLibraryPage },
                 { path: 'testimonials', name: 'admin.testimonials', component: EntityPage, meta: { module: 'testimonials' } },
                 { path: 'settings', name: 'admin.settings', component: SettingsPage },
+                { path: 'referentiels', name: 'admin.references', component: ReferencePage },
                 { path: 'profil', name: 'admin.profile', component: ProfilePage },
             ],
         },

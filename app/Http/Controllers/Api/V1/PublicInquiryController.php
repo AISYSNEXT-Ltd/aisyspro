@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePublicInquiryRequest;
 use App\Models\Inquiry;
-use App\Models\Lead;
 use App\Models\OfferOption;
 use App\Models\Pack;
+use App\Services\LeadCreationService;
+use App\Support\ReferenceGroups;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\DB;
 class PublicInquiryController extends Controller
 {
     private const CONSENT_VERSION = 'privacy-v1-2026-09-06';
+
+    public function __construct(private LeadCreationService $leadCreation) {}
 
     public function store(StorePublicInquiryRequest $request): JsonResponse
     {
@@ -62,7 +65,7 @@ class PublicInquiryController extends Controller
                     'budget_range' => $data['budget_range'] ?? null,
                     'estimated_total' => $estimatedTotal,
                     'message' => $data['message'] ?? 'Demande transmise depuis le configurateur AISYSPRO.',
-                    'status' => 'new',
+                    'status' => ReferenceGroups::defaultCode('inquiry_status', 'new'),
                     'consent_accepted_at' => now(),
                     'consent_version' => self::CONSENT_VERSION,
                     'consent_ip_hash' => hash_hmac('sha256', (string) $request->ip(), (string) config('app.key')),
@@ -70,13 +73,13 @@ class PublicInquiryController extends Controller
                     'source_url' => $data['source_url'] ?? null,
                 ]);
 
-                $lead = Lead::query()->create([
+                $lead = $this->leadCreation->createWithDraftQuote([
                     'name' => $inquiry->name,
                     'email' => $inquiry->email,
                     'phone' => $inquiry->phone,
                     'company' => $inquiry->company,
                     'source' => $inquiry->type === 'quote' ? 'portal_quote' : 'portal_contact',
-                    'status' => 'new',
+                    'status' => ReferenceGroups::defaultCode('lead_status', 'new'),
                     'value' => $estimatedTotal ?? 0,
                     'notes' => $this->leadNotes($inquiry),
                 ]);

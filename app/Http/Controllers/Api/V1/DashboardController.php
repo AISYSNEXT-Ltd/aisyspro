@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\Client;
+use App\Models\Inquiry;
 use App\Models\Lead;
 use App\Models\Quote;
 use App\Models\Solution;
@@ -17,6 +18,7 @@ class DashboardController extends Controller
     {
         return response()->json(['data' => [
             'leads' => Lead::count(),
+            'new_inquiries' => Inquiry::where('status', 'new')->count(),
             'qualified_leads' => Lead::where('status', 'qualified')->count(),
             'clients' => Client::where('status', 'active')->count(),
             'quotes' => Quote::count(),

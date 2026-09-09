@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\PageSectionController;
 use App\Http\Controllers\Api\V1\PublicContentController;
 use App\Http\Controllers\Api\V1\PublicInquiryController;
 use App\Http\Controllers\Api\V1\QuoteController;
+use App\Http\Controllers\Api\V1\ReferenceValueController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SiteSettingController;
 use App\Http\Controllers\Api\V1\SolutionController;
@@ -43,9 +44,12 @@ Route::prefix('v1')->group(function (): void {
     // Sanctum's stateful-domain detection (notably behind a reverse proxy/CDN).
     Route::middleware(['web', 'auth:sanctum', 'active'])->group(function (): void {
         Route::get('/dashboard', DashboardController::class);
+        Route::get('/reference-values', [ReferenceValueController::class, 'index']);
         Route::middleware('role:administrateur,commercial')->group(function (): void {
             Route::apiResource('clients', ClientController::class)->parameters(['clients' => 'id']);
             Route::apiResource('leads', LeadController::class)->parameters(['leads' => 'id']);
+            Route::get('/lead-pipeline', [LeadController::class, 'pipeline']);
+            Route::patch('/leads/{lead}/stage', [LeadController::class, 'move']);
             Route::apiResource('quotes', QuoteController::class)->parameters(['quotes' => 'id']);
             Route::apiResource('tasks', TaskController::class)->parameters(['tasks' => 'id']);
             Route::apiResource('inquiries', InquiryController::class)->parameters(['inquiries' => 'id']);
@@ -78,6 +82,8 @@ Route::prefix('v1')->group(function (): void {
             Route::apiResource('users', UserController::class)->parameters(['users' => 'id']);
             Route::get('/settings', [SiteSettingController::class, 'index']);
             Route::put('/settings', [SiteSettingController::class, 'update']);
+            Route::apiResource('reference-values', ReferenceValueController::class)
+                ->parameters(['reference-values' => 'referenceValue'])->except(['show', 'index']);
         });
     });
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Inquiry;
+use App\Support\ReferenceGroups;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
@@ -32,7 +33,7 @@ class InquiryController extends CrudController
             'budget_range' => ['nullable', Rule::in(['under-1000', '1000-3000', '3000-10000', 'over-10000', 'undecided'])],
             'estimated_total' => ['nullable', 'numeric', 'min:0'],
             'message' => ['required', 'string', 'max:5000'],
-            'status' => ['required', Rule::in(['new', 'in_progress', 'closed'])],
+            'status' => ['required', ReferenceGroups::activeRule('inquiry_status')],
             'assigned_to' => ['nullable', 'exists:users,id'],
             'processed_at' => ['nullable', 'date'],
         ];
