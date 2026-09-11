@@ -26,18 +26,13 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
           SSH_HOST_KEY: ${{ secrets.STAGING_SSH_HOST_KEY }}
-          STAGING_HOST: ${{ secrets.STAGING_HOST }}
-          STAGING_PORT: ${{ secrets.STAGING_PORT }}
         run: |
+          test -n "$SSH_PRIVATE_KEY"
+          test -n "$SSH_HOST_KEY"
           install -d -m 700 "$RUNNER_TEMP/ssh"
           install -m 600 /dev/null "$RUNNER_TEMP/ssh/key"
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/ssh/key"
-          if [ -n "$SSH_HOST_KEY" ]; then
-            printf '%s\n' "$SSH_HOST_KEY" > "$RUNNER_TEMP/ssh/known_hosts"
-          else
-            ssh-keyscan -T 10 -p "${STAGING_PORT:-22}" "$STAGING_HOST" | tee "$RUNNER_TEMP/ssh/known_hosts"
-            test -s "$RUNNER_TEMP/ssh/known_hosts"
-          fi
+          printf '%s\n' "$SSH_HOST_KEY" > "$RUNNER_TEMP/ssh/known_hosts"
 
       - name: Deploy develop on CloudPanel site
         env:
